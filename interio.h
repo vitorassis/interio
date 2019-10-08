@@ -45,6 +45,10 @@ void addMenuOption(menu &_menu, const char option[], int enabled=1){
 	_menu.menu_size++;
 }
 
+void clearMenuOptions(menu &_menu){
+	_menu.menu_size = 0;
+}
+
 void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	
 	xi = xi<1? 1 : xi;
 	yi = yi<1? 1 : yi;
