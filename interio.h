@@ -14,6 +14,37 @@
 
 #define clearScreen clrscr
 
+struct menuOption{
+	char option[50];
+	int enabled;
+};
+
+struct menu{
+	int min;
+	int max;
+	int x;
+	char cursor;
+	menuOption options[20];
+	int menu_size;
+};
+
+menu setMenu(int min, int max, int x=30, char cursor='>'){
+	menu _menu;
+	_menu.min = min;
+	_menu.max = max;
+	_menu.x = x;
+	_menu.cursor = cursor;
+	_menu.menu_size = 0;
+	return _menu;
+}
+
+void addMenuOption(menu &_menu, const char option[], int enabled=1){
+	void showToast(const char[]), removeToast();
+	strcpy(_menu.options[_menu.menu_size].option, option);
+	_menu.options[_menu.menu_size].enabled = enabled;
+	_menu.menu_size++;
+}
+
 void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	
 	xi = xi<1? 1 : xi;
 	yi = yi<1? 1 : yi;
@@ -120,29 +151,48 @@ void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int pre
 	}
 }
 
-int showMenu(char options[][50], int min, int max, int x=9, char cursor=187){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE COORDINATE
-	int coord = min;
+int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE COORDINATE
+	int coord = menuSettings.min;
 	char tecla;
-	int size = max-min;
 	
-	clearCoordinates(x, min, x+25, max);
+	clearCoordinates(menuSettings.x, menuSettings.min, menuSettings.x+25, menuSettings.max);
 	
-	for(int i=0; i<=size; i++){
-		gotoxy(x, i+min);printf("%s", options[i]);
+	for(int i=0; i<menuSettings.menu_size; i++){
+		gotoxy(menuSettings.x, i+menuSettings.min);printf("%s", menuSettings.options[i].option);
 	}
 	do{
-		gotoxy(x-2, coord);printf("%c", cursor);
+		gotoxy(menuSettings.x-2, coord);printf("%c", menuSettings.cursor);
 		tecla = getch();
-		clearCoordinates(x-2, coord, x-1, coord);
+		clearCoordinates(menuSettings.x-2, coord, menuSettings.x-1, coord);
 		
 		switch(tecla){
 			case 72:
-				coord = coord-1<min ? max : coord-1;
+				coord = coord-1<menuSettings.min ? menuSettings.max : coord-1;
+				while(!menuSettings.options[coord-menuSettings.min].enabled && (coord < menuSettings.max && coord > menuSettings.min))
+					coord--;
+				coord = coord < menuSettings.min ? menuSettings.max : coord;
 				break;
 			case 80:
-				coord = coord+1>max ? min : coord+1;
+				coord = coord+1>menuSettings.max ? menuSettings.min : coord+1;
+				while(!menuSettings.options[coord-menuSettings.min].enabled && (coord < menuSettings.max && coord > menuSettings.min))
+					coord++;
+				coord = coord > menuSettings.max ? menuSettings.min : coord;
 		}
 	}while(tecla != 13);
 	
 	return coord;
+}
+
+void dumpIntVector(int vetor[], int size){
+
+	clearScreen();
+	
+	printf("Array => (\n");
+	for(int i=0; i<size; i++){
+		printf("\t[%d] => %d\n", i, vetor[i]);
+	}
+	printf(")");
+	getch();
+	clearScreen();
+	drawCanvas();
 }
