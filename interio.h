@@ -28,10 +28,9 @@ struct menu{
 	int menu_size;
 };
 
-menu setMenu(int min, int max, int x=30, char cursor='>'){
+menu setMenu(int min, int x=30, char cursor='>'){
 	menu _menu;
 	_menu.min = min;
-	_menu.max = max;
 	_menu.x = x;
 	_menu.cursor = cursor;
 	_menu.menu_size = 0;
@@ -157,6 +156,7 @@ void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int pre
 
 int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE COORDINATE
 	int coord = menuSettings.min;
+	menuSettings.max = menuSettings.min + menuSettings.menu_size-1;
 	char tecla;
 	
 	clearCoordinates(menuSettings.x, menuSettings.min, menuSettings.x+25, menuSettings.max);
