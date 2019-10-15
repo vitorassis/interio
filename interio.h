@@ -155,7 +155,12 @@ void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int pre
 }
 
 int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE COORDINATE
-	int coord = menuSettings.min;
+	int coord;
+	int y;
+	for(y=0; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
+	
+	coord = menuSettings.min + y;
+	
 	menuSettings.max = menuSettings.min + menuSettings.menu_size-1;
 	char tecla;
 	
@@ -172,13 +177,13 @@ int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS
 		switch(tecla){
 			case 72:
 				coord = coord-1<menuSettings.min ? menuSettings.max : coord-1;
-				while(!menuSettings.options[coord-menuSettings.min].enabled && (coord < menuSettings.max && coord > menuSettings.min))
+				while(!menuSettings.options[coord-menuSettings.min].enabled && coord-menuSettings.min >= 0)
 					coord--;
 				coord = coord < menuSettings.min ? menuSettings.max : coord;
 				break;
 			case 80:
 				coord = coord+1>menuSettings.max ? menuSettings.min : coord+1;
-				while(!menuSettings.options[coord-menuSettings.min].enabled && (coord < menuSettings.max && coord > menuSettings.min))
+				while(!menuSettings.options[coord-menuSettings.min].enabled && coord < menuSettings.max)
 					coord++;
 				coord = coord > menuSettings.max ? menuSettings.min : coord;
 		}
