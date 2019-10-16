@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 1.0.1
+* version 1.0.3
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like 
@@ -28,27 +28,58 @@ struct menu{
 	int menu_size;
 };
 
-menu setMenu(int min, int x=30, char cursor='>'){
+
+/*
+*	@param yStart int
+*	@param x int default 30
+*	@param cursor char default '>'
+*	
+*	@returnType menu
+*/
+menu setMenu(int yStart, int x=30, char cursor='>'){ //IT INITIALIZES THE MENU OBJECT
 	menu _menu;
-	_menu.min = min;
+	_menu.min = yStart;
 	_menu.x = x;
 	_menu.cursor = cursor;
 	_menu.menu_size = 0;
 	return _menu;
 }
 
-void addMenuOption(menu &_menu, const char option[], int enabled=1){
+
+/*
+*	@param _menu menu
+*	@param option[] char
+*	@param enabled int default 1
+*	
+*	@returnType menu => CREATED MENU
+*/
+void addMenuOption(menu &_menu, const char option[], int enabled=1){ //IT ADDS A NEW MENU OPTION
 	void showToast(const char[]), removeToast();
 	strcpy(_menu.options[_menu.menu_size].option, option);
 	_menu.options[_menu.menu_size].enabled = enabled;
 	_menu.menu_size++;
 }
 
+
+/*
+*	@param _menu menu
+*	
+*	@returnType void
+*/
 void clearMenuOptions(menu &_menu){
 	_menu.menu_size = 0;
 }
 
-void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int default 0
+*	@param yf int default 0
+*	
+*	@returnType void
+*/
+void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE THE DETERMINED AREA
 	xi = xi<1? 1 : xi;
 	yi = yi<1? 1 : yi;
 	
@@ -62,11 +93,29 @@ void clearCoordinates(int xi, int yi, int xf=0, int yf=0){
 		}                                                     
 	}                             
 }
-	                                  
-void clearCanvas(){               
+
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int default 0
+*	@param yf int default 0
+*	
+*	@returnType void
+*/                                  
+void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA           
 	clearCoordinates(2, 4, 79, 21);   
 }
 
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int default 0
+*	@param yf int default 0
+*	
+*	@returnType void
+*/
 void drawLine(int start, int finish, int coordinate, int horizontal=0){
 	int i;
 	for (i=start; i<=finish; i++){
@@ -78,7 +127,11 @@ void drawLine(int start, int finish, int coordinate, int horizontal=0){
 	}
 }
 
-void drawCanvas(){ 	
+
+/*	
+*	@returnType void
+*/
+void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
 	drawLine(1, 80, 1); //TOP
 	drawLine(1, 24, 1, 1); //LEFT
 	drawLine(1, 80, 24); //BOTTOM
@@ -86,29 +139,56 @@ void drawCanvas(){
 	
 }
 
+
+/*
+*	@returnType void
+*/
 void removeToast(){ //REMOVE NOTIFICATION TEXT
 	clearCoordinates(2, 22, 79, 22);
 }
 
+
+/*
+*	@param texto[] char
+*	
+*	@returnType int => CENTER X
+*/
 int centralize(const char texto[]){ //CENTRALIZE TEXT
 	return (78-strlen(texto))/2;
 }
 
+
+/*
+*	@param texto[] char
+*	
+*	@returnType void
+*/
 void showToast(const char texto[]){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	gotoxy(centralize(texto), 22);printf("* %s *", texto);
 }
-int readIntVariable(int xi, int yi, int xf, int yf, int previous=0){ //IT SHOWS INT INPUT
+
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int
+*	@param yf int
+*	@param showPrevious int default 0
+*	
+*	@returnType int => INT READ VARIABLE
+*/
+int readIntVariable(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SHOWS INT INPUT
 	int aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
-	if(previous != 0){
-		gotoxy(xi, yi+1); printf("(Atual: %d)", previous);
+	if(showPrevious != 0){
+		gotoxy(xi, yi+1); printf("(Atual: %d)", showPrevious);
 	}
 	fflush(stdin);
 	gotoxy(xi, yi); scanf("%d",&aux);
 	
-	if(previous != 0){
+	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 	}
@@ -116,16 +196,26 @@ int readIntVariable(int xi, int yi, int xf, int yf, int previous=0){ //IT SHOWS 
 	return aux;
 }
 
-float readFloatVariable(int xi, int yi, int xf, int yf, float previous=0){ //IT SHOWS FLOAT INPUT
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int
+*	@param yf int
+*	@param showPrevious int default 0
+*	
+*	@returnType int => FLOAT READ VARIABLE
+*/
+float readFloatVariable(int xi, int yi, int xf, int yf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
 	float aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
-	if(previous != 0){
-		gotoxy(xi, yi+1); printf("(Atual: %.1f)", previous);
+	if(showPrevious != 0){
+		gotoxy(xi, yi+1); printf("(Atual: %.1f)", showPrevious);
 	}
 	fflush(stdin);
 	gotoxy(xi, yi); scanf("%f", &aux);
-	if(previous != 0){
+	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 	}
@@ -133,18 +223,28 @@ float readFloatVariable(int xi, int yi, int xf, int yf, float previous=0){ //IT 
 	return aux;
 }
 
-void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int previous = 0){ //IT SHOWS STRING INPUT
+
+/*
+*	@param variable[] char
+*	@param yi int
+*	@param xf int
+*	@param yf int
+*	@param showPrevious int default 0
+*
+*	@returnType void
+*/
+void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
 	int clear_untill;
 	char ancient[40];
 	clearCoordinates(xi, yi, xf, yf);
-	if(previous){
+	if(showPrevious){
 		strcpy(ancient, variable);
 		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
 	}
 	fflush(stdin);
 	gotoxy(xi, yi); gets(variable);
 	
-	if(previous != 0){
+	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 		if(stricmp(variable, "\0") == 0){
@@ -154,7 +254,13 @@ void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int pre
 	}
 }
 
-int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE COORDINATE
+
+/*
+*	@param menuSettings menu
+*	
+*	@returnType int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED)
+*/
+int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
 	int coord;
 	int y;
 	for(y=0; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
@@ -189,9 +295,19 @@ int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS
 		}
 	}while(tecla != 13);
 	
-	return coord;
+	return coord-menuSettings.min;
 }
 
+
+/*
+*	@param xi int
+*	@param yi int
+*	@param xf int
+*	@param yf int
+*	@param showPrevious int default 0
+*	
+*	@returnType int => INT READ VARIABLE
+*/
 void dumpIntVector(int vetor[], int size){
 
 	clearScreen();
