@@ -178,7 +178,7 @@ void showToast(const char texto[]){ //SHOW NOTIFICATION TEXT
 *	
 *	@returnType int => INT READ VARIABLE
 */
-int readIntVariable(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SHOWS INT INPUT
+int readInt(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SHOWS INT INPUT
 	int aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
@@ -206,7 +206,7 @@ int readIntVariable(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SH
 *	
 *	@returnType int => FLOAT READ VARIABLE
 */
-float readFloatVariable(int xi, int yi, int xf, int yf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
+float readFloat(int xi, int yi, int xf, int yf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
 	float aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
@@ -233,7 +233,7 @@ float readFloatVariable(int xi, int yi, int xf, int yf, float showPrevious=0){ /
 *
 *	@returnType void
 */
-void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readString(char variable[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
 	int clear_untill;
 	char ancient[40];
 	clearCoordinates(xi, yi, xf, yf);
@@ -244,6 +244,115 @@ void readStringVariable(char variable[], int xi, int yi, int xf, int yf, int sho
 	fflush(stdin);
 	gotoxy(xi, yi); gets(variable);
 	
+	if(showPrevious != 0){
+		clear_untill = xf+10 < 79 ? xf+10 : 79;
+		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		if(stricmp(variable, "\0") == 0){
+			gotoxy(xi, yi); printf("%s", ancient);
+			strcpy(variable, ancient);
+		}
+	}
+}
+
+/*
+*	@param variable[] char
+*	@param mask[] char
+*	@param yi int
+*	@param xf int
+*	@param yf int
+*	@param showPrevious int default 0
+*
+*	@returnType void
+*/
+void readMaskedString(char variable[], char mask[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+	int clear_untill;
+	char ancient[40];
+	strcpy(variable, mask);
+	int len = strlen(mask);
+	
+	clearCoordinates(xi, yi, xf, yf);
+	if(showPrevious){
+		strcpy(ancient, variable);
+		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
+	}
+	fflush(stdin);
+	gotoxy(xi, yi);
+	char caracter;
+	for(int i=0; i<len; i++){
+		caracter = mask[i];
+		switch(caracter){
+			case 'd':
+			case 'a':
+			case 'A':
+			case 'x':
+				caracter = ' ';
+		}
+		printf("%c", caracter);
+		variable[i] = caracter;
+	}
+	variable[len-1] = '\0';
+	
+	gotoxy(xi, yi);
+	char tecla='0';
+	int pos=0;
+	while(pos < len && tecla != 13){
+		tecla = getch();
+		
+		if(tecla == 8){ //BASCKSPACE
+			showToast("Entrou");
+			if(pos>0)
+				pos--;
+			while(pos>0 && mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+				pos--;
+			variable[pos] = ' ';
+		}else{
+			removeToast();
+			switch(mask[pos]){
+				case 'd':
+					if(tecla >= '0' && tecla <= '9'){
+						variable[pos] = tecla;
+						pos++;
+						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+							pos++;
+						caracter = tecla;
+					}
+					break;
+				case 'a':
+					if(tecla >= 'a' && tecla <= 'z'){
+						variable[pos] = tecla;
+						pos++;
+						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+							pos++;
+						caracter = tecla;
+					}
+					break;
+				case 'A':
+					if(tecla >= 'A' && tecla <= 'Z'){
+						variable[pos] = tecla;
+						pos++;
+						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+							pos++;
+						caracter = tecla;
+					}
+					break;
+				case 'x':
+					while((tecla >= '0' && tecla <= '9') || (tecla >= 'a' && tecla <= 'z') || (tecla >= 'A' && tecla <= 'Z')){
+						variable[pos] = tecla;
+						pos++;
+						if(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+							pos++;
+						caracter = tecla;
+					}
+					break;
+				default:
+					pos++;
+			}
+		}
+		gotoxy(xi, yi); puts(variable);
+	}
+	
+	variable[pos] = '\0';
+		
 	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
