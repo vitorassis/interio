@@ -171,14 +171,14 @@ void showToast(const char texto[]){ //SHOW NOTIFICATION TEXT
 
 /*
 *	@param xi int
-*	@param yi int
+*	@param y int
 *	@param xf int
-*	@param yf int
 *	@param showPrevious int default 0
 *	
 *	@returnType int => INT READ VARIABLE
 */
-int readInt(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SHOWS INT INPUT
+int readInt(int xi, int y, int xf, int showPrevious=0){ //IT SHOWS INT INPUT
+	int yi, yf=yi=y;
 	int aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
@@ -199,14 +199,14 @@ int readInt(int xi, int yi, int xf, int yf, int showPrevious=0){ //IT SHOWS INT 
 
 /*
 *	@param xi int
-*	@param yi int
+*	@param y int
 *	@param xf int
-*	@param yf int
 *	@param showPrevious int default 0
 *	
-*	@returnType int => FLOAT READ VARIABLE
+*	@returnType float => FLOAT READ VARIABLE
 */
-float readFloat(int xi, int yi, int xf, int yf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
+float readFloat(int xi, int y, int xf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
+	int yi, yf=yi=y;
 	float aux;
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
@@ -226,14 +226,15 @@ float readFloat(int xi, int yi, int xf, int yf, float showPrevious=0){ //IT SHOW
 
 /*
 *	@param variable[] char
-*	@param yi int
+*	@param xi int
+*	@param y int
 *	@param xf int
-*	@param yf int
 *	@param showPrevious int default 0
 *
 *	@returnType void
 */
-void readString(char variable[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readString(char variable[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
 	clearCoordinates(xi, yi, xf, yf);
@@ -257,14 +258,15 @@ void readString(char variable[], int xi, int yi, int xf, int yf, int showPreviou
 /*
 *	@param variable[] char
 *	@param mask[] char
-*	@param yi int
+*	@param xi int
+*	@param y int
 *	@param xf int
-*	@param yf int
 *	@param showPrevious int default 0
 *
 *	@returnType void
 */
-void readMaskedString(char variable[], char mask[], int xi, int yi, int xf, int yf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readMaskedString(char variable[], char mask[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
 	strcpy(variable, mask);
@@ -299,7 +301,6 @@ void readMaskedString(char variable[], char mask[], int xi, int yi, int xf, int 
 		tecla = getch();
 		
 		if(tecla == 8){ //BASCKSPACE
-			showToast("Entrou");
 			if(pos>0)
 				pos--;
 			while(pos>0 && mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
@@ -349,6 +350,65 @@ void readMaskedString(char variable[], char mask[], int xi, int yi, int xf, int 
 			}
 		}
 		gotoxy(xi, yi); puts(variable);
+	}
+	
+	variable[pos] = '\0';
+		
+	if(showPrevious != 0){
+		clear_untill = xf+10 < 79 ? xf+10 : 79;
+		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		if(stricmp(variable, "\0") == 0){
+			gotoxy(xi, yi); printf("%s", ancient);
+			strcpy(variable, ancient);
+		}
+	}
+}
+
+/*
+*	@param variable[] char
+*	@param mask char
+*	@param xi int
+*	@param y int
+*	@param xf int
+*	@param showPrevious int default 0
+*
+*	@returnType void
+*/
+void readPassword(char variable[], char mask, int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+	int yi, yf=yi=y;
+	int clear_untill;
+	char ancient[40];
+	strcpy(variable, "\0");
+	
+	clearCoordinates(xi, yi, xf, yf);
+	if(showPrevious){
+		strcpy(ancient, variable);
+		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
+	}
+	fflush(stdin);
+	
+	gotoxy(xi, yi);
+	char tecla='0';
+	int pos=0;
+	while(tecla != 13){
+		tecla = getch();
+		
+		if(tecla == 8){ //BASCKSPACE
+			
+			if(pos>0)
+				pos--;
+			variable[pos] = '\0';
+		}else if(tecla != 13){
+			removeToast();
+			
+			variable[pos] = tecla;
+			variable[pos+1] = '\0';
+			pos++;
+		}
+		clearCoordinates(xi, yi, xf, yf);
+		gotoxy(xi, yi); 
+		for(int j=0; j<strlen(variable); j++)
+			printf("%c", mask);
 	}
 	
 	variable[pos] = '\0';
