@@ -158,6 +158,15 @@ int centralize(const char texto[]){ //CENTRALIZE TEXT
 	return (78-strlen(texto))/2;
 }
 
+/*
+*	@param texto[] char
+*	@param y int
+*	
+*	@returnType void
+*/
+void printCenter(const char text[], int y){
+	gotoxy(centralize(text), y);puts(text);
+}
 
 /*
 *	@param texto[] char
@@ -271,7 +280,7 @@ int maskChar(char caracter){
 *
 *	@returnType void
 */
-void readMaskedString(char variable[], char mask[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readMaskedString(char variable[], const char mask[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
