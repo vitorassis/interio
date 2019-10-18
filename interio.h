@@ -9,6 +9,7 @@
 #include <conio2.h>
 #include <locale.h>
 #include <string.h>
+#include <ctype.h>
 
 #define border []
 
@@ -255,6 +256,11 @@ void readString(char variable[], int xi, int y, int xf, int showPrevious = 0){ /
 	}
 }
 
+
+int maskChar(char caracter){
+	return caracter == 'd' || caracter == 'a' || caracter == 'A' || caracter == 'x';
+}
+
 /*
 *	@param variable[] char
 *	@param mask[] char
@@ -297,50 +303,53 @@ void readMaskedString(char variable[], char mask[], int xi, int y, int xf, int s
 	gotoxy(xi, yi);
 	char tecla='0';
 	int pos=0;
-	while(pos < len && tecla != 13){
+	int start=0;
+	for(start; !maskChar(mask[start]); start++);
+	pos=start;
+	while(tecla != 13){
 		tecla = getch();
 		
-		if(tecla == 8){ //BASCKSPACE
-			if(pos>0)
+		if(tecla == 8){ //BACKSPACE
+			if(pos > start)
 				pos--;
-			while(pos>0 && mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+			while(pos>start && !maskChar(mask[pos]))
 				pos--;
 			variable[pos] = ' ';
-		}else{
+		}else if(pos < len){
 			removeToast();
 			switch(mask[pos]){
 				case 'd':
-					if(tecla >= '0' && tecla <= '9'){
+					if(isdigit(tecla)){
 						variable[pos] = tecla;
 						pos++;
-						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+						while(!maskChar(mask[pos]))
 							pos++;
 						caracter = tecla;
 					}
 					break;
 				case 'a':
-					if(tecla >= 'a' && tecla <= 'z'){
+					if(isalpha(tecla) && islower(tecla)){
 						variable[pos] = tecla;
 						pos++;
-						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+						while(!maskChar(mask[pos]))
 							pos++;
 						caracter = tecla;
 					}
 					break;
 				case 'A':
-					if(tecla >= 'A' && tecla <= 'Z'){
+					if(isalpha(tecla) && isupper(tecla)){
 						variable[pos] = tecla;
 						pos++;
-						while(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+						while(!maskChar(mask[pos]))
 							pos++;
 						caracter = tecla;
 					}
 					break;
 				case 'x':
-					while((tecla >= '0' && tecla <= '9') || (tecla >= 'a' && tecla <= 'z') || (tecla >= 'A' && tecla <= 'Z')){
+					if((isdigit(tecla)) || (isalpha(tecla))){
 						variable[pos] = tecla;
 						pos++;
-						if(mask[pos] != 'd' && mask[pos] != 'a' && mask[pos] != 'A' && mask[pos] != 'x')
+						while(!maskChar(mask[pos]))
 							pos++;
 						caracter = tecla;
 					}
@@ -469,13 +478,10 @@ int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS
 
 
 /*
-*	@param xi int
-*	@param yi int
-*	@param xf int
-*	@param yf int
-*	@param showPrevious int default 0
+*	@param vetor[] int
+*	@param size int
 *	
-*	@returnType int => INT READ VARIABLE
+*	@returnType void
 */
 void dumpIntVector(int vetor[], int size){
 
