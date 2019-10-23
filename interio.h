@@ -1,17 +1,17 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 1.0.3
+* version 1.0.5
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
-* If you like 
+* If you like, share, pull and enjoy it!
 */
 
 #include <conio2.h>
 #include <locale.h>
 #include <string.h>
 #include <ctype.h>
-
-#define border []
+#include <stdlib.h>
+#include <windows.h>
 
 #define clearScreen clrscr
 
@@ -105,7 +105,7 @@ void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE T
 *	@returnType void
 */                                  
 void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA           
-	clearCoordinates(2, 4, 79, 21);   
+	clearCoordinates(2, 4, 79, 19);   
 }
 
 
@@ -117,14 +117,14 @@ void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 *	
 *	@returnType void
 */
-void drawLine(int start, int finish, int coordinate, int horizontal=0){
+void drawLine(int start, int finish, int coordinate, int horizontal=0, char border='*'){
 	int i;
 	for (i=start; i<=finish; i++){
 		if(!horizontal)
 			gotoxy(i, coordinate);
 		else
 			gotoxy(coordinate, i);
-		printf("*");
+		printf("%c", border);
 	}
 }
 
@@ -132,14 +132,14 @@ void drawLine(int start, int finish, int coordinate, int horizontal=0){
 /*	
 *	@returnType void
 */
-void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
-	drawLine(1, 80, 1); //TOP
-	drawLine(1, 24, 1, 1); //LEFT
-	drawLine(1, 80, 24); //BOTTOM
-	drawLine(1, 24, 80, 1); //RIGHT
-	
+void drawCanvas(char border='#', int notification_area=0){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
+	drawLine(1, 80, 1, 0, border); //TOP
+	drawLine(1, 24, 1, 1, border); //LEFT
+	drawLine(1, 80, 24, 0, border); //BOTTOM
+	drawLine(1, 24, 80, 1, border); //RIGHT
+	if(notification_area)
+		drawLine(1, 80, 20, 0, border); //BOTTOM
 }
-
 
 /*
 *	@returnType void
@@ -189,21 +189,45 @@ void showToast(const char texto[]){ //SHOW NOTIFICATION TEXT
 */
 int readInt(int xi, int y, int xf, int showPrevious=0){ //IT SHOWS INT INPUT
 	int yi, yf=yi=y;
-	int aux;
+	int sizeInt = 32;
+	char aux[sizeInt];
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
 	if(showPrevious != 0){
 		gotoxy(xi, yi+1); printf("(Atual: %d)", showPrevious);
 	}
 	fflush(stdin);
-	gotoxy(xi, yi); scanf("%d",&aux);
+	gotoxy(xi, yi); 
+	
+	aux[0] = '\0';
+	char tecla='0';
+	int pos=0;
+	while(tecla != 13){
+		tecla = getch();
+		
+		if(tecla == 8){ //BASCKSPACE
+			
+			if(pos>0)
+				pos--;
+			aux[pos] = '\0';
+		}else if(tecla != 13 && isdigit(tecla) && pos < sizeInt){
+			
+			aux[pos] = tecla;
+			aux[pos+1] = '\0';
+			pos++;
+		}
+		clearCoordinates(xi, yi, xf, yf);
+		gotoxy(xi, yi); puts(aux);
+	}
+	
+	aux[pos] = '\0';
 	
 	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 	}
 	
-	return aux;
+	return atoi(aux);
 }
 
 
@@ -217,20 +241,44 @@ int readInt(int xi, int y, int xf, int showPrevious=0){ //IT SHOWS INT INPUT
 */
 float readFloat(int xi, int y, int xf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
 	int yi, yf=yi=y;
-	float aux;
+	int sizeFloat = 64;
+	char aux[sizeFloat];
 	int clear_untill;
 	clearCoordinates(xi, yi, xf, yf);
 	if(showPrevious != 0){
 		gotoxy(xi, yi+1); printf("(Atual: %.1f)", showPrevious);
 	}
 	fflush(stdin);
-	gotoxy(xi, yi); scanf("%f", &aux);
+	gotoxy(xi, yi); 
+	
+	aux[0] = '\0';
+	char tecla='0';
+	int pos=0;
+	while(tecla != 13){
+		tecla = getch();
+		
+		if(tecla == 8){ //BASCKSPACE
+			
+			if(pos>0)
+				pos--;
+			aux[pos] = '\0';
+		}else if(tecla != 13 && (isdigit(tecla) || tecla == '.') && pos < sizeFloat){
+			
+			aux[pos] = tecla;
+			aux[pos+1] = '\0';
+			pos++;
+		}
+		clearCoordinates(xi, yi, xf, yf);
+		gotoxy(xi, yi); puts(aux);
+	}
+	
+	aux[pos] = '\0';
 	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 	}
 	
-	return aux;
+	return atof(aux);
 }
 
 
