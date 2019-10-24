@@ -214,24 +214,29 @@ void showToast(const char texto[], int type=7){ //SHOW NOTIFICATION TEXT
 
 
 /*
-*	@param xi int
+*	@param x int
 *	@param y int
-*	@param xf int
+*	@param maxLength int
 *	@param showPrevious int default 0
 *	
 *	@returnType int => INT READ VARIABLE
 */
-int readInt(int xi, int y, int xf, int showPrevious=0){ //IT SHOWS INT INPUT
+int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INPUT
 	int yi, yf=yi=y;
-	int sizeInt = 32;
+	int sizeInt = maxLength;
 	char aux[sizeInt];
 	int clear_untill;
-	clearCoordinates(xi, yi, xf, yf);
+	clearCoordinates(x, yi, x+maxLength, yf);
 	if(showPrevious != 0){
-		gotoxy(xi, yi+1); printf("(Atual: %d)", showPrevious);
+		gotoxy(x, yi+2); printf("(Atual: %d)", showPrevious);
 	}
+	textbackground(7);
+	for(int i = x; i<x+maxLength; i++){
+		gotoxy(i, y+1);printf(" ");
+	}
+	textbackground(0);
 	fflush(stdin);
-	gotoxy(xi, yi); 
+	gotoxy(x, yi); 
 	
 	aux[0] = '\0';
 	char tecla='0';
@@ -250,40 +255,49 @@ int readInt(int xi, int y, int xf, int showPrevious=0){ //IT SHOWS INT INPUT
 			aux[pos+1] = '\0';
 			pos++;
 		}
-		clearCoordinates(xi, yi, xf, yf);
-		gotoxy(xi, yi); puts(aux);
+		clearCoordinates(x, yi, x+maxLength, yf);
+		gotoxy(x, yi); puts(aux);
 	}
 	
 	aux[pos] = '\0';
 	
 	if(showPrevious != 0){
-		clear_untill = xf+10 < 79 ? xf+10 : 79;
-		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		if(stricmp(aux, "\0") == 0){
+			gotoxy(x, yi); printf("%d", showPrevious);
+		}
+		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clearCoordinates(x, yi+2, clear_untill, yf+2);
 	}
-	
-	return atoi(aux);
+	clearCoordinates(x, y+1, x+maxLength, y+1);
+	int retorno = showPrevious ? stricmp(aux, "\0") == 0 ? showPrevious : atoi(aux) : atoi(aux);
+	return retorno;
 }
 
 
 /*
-*	@param xi int
+*	@param x int
 *	@param y int
-*	@param xf int
+*	@param maxLength int
 *	@param showPrevious int default 0
 *	
 *	@returnType float => FLOAT READ VARIABLE
 */
-float readFloat(int xi, int y, int xf, float showPrevious=0){ //IT SHOWS FLOAT INPUT
+float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS FLOAT INPUT
 	int yi, yf=yi=y;
-	int sizeFloat = 64;
+	int sizeFloat = maxLength;
 	char aux[sizeFloat];
 	int clear_untill;
-	clearCoordinates(xi, yi, xf, yf);
+	clearCoordinates(x, yi, x+maxLength, yf);
 	if(showPrevious != 0){
-		gotoxy(xi, yi+1); printf("(Atual: %.1f)", showPrevious);
+		gotoxy(x, yi+2); printf("(Atual: %.1f)", showPrevious);
 	}
+	textbackground(7);
+	for(int i = x; i<x+maxLength; i++){
+		gotoxy(i, y+1);printf(" ");
+	}
+	textbackground(0);
 	fflush(stdin);
-	gotoxy(xi, yi); 
+	gotoxy(x, y); 
 	
 	aux[0] = '\0';
 	char tecla='0';
@@ -302,49 +316,83 @@ float readFloat(int xi, int y, int xf, float showPrevious=0){ //IT SHOWS FLOAT I
 			aux[pos+1] = '\0';
 			pos++;
 		}
-		clearCoordinates(xi, yi, xf, yf);
-		gotoxy(xi, yi); puts(aux);
+		clearCoordinates(x, yi, x+maxLength, yf);
+		gotoxy(x, yi); puts(aux);
 	}
 	
 	aux[pos] = '\0';
 	if(showPrevious != 0){
-		clear_untill = xf+10 < 79 ? xf+10 : 79;
-		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		if(stricmp(aux, "\0") == 0){
+			gotoxy(x, yi); printf("%.1f", showPrevious);
+		}
+		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clearCoordinates(x, yi+2, clear_untill, yf+2);
 	}
-	
-	return atof(aux);
+	clearCoordinates(x, yi+1, clear_untill, yf+1);
+	float retorno = showPrevious ? stricmp(aux, "\0") == 0 ? showPrevious : atof(aux) : atof(aux);
+	return retorno;
 }
 
 
 /*
 *	@param variable[] char
-*	@param xi int
+*	@param x int
 *	@param y int
-*	@param xf int
+*	@param maxLength int
 *	@param showPrevious int default 0
 *
 *	@returnType void
 */
-void readString(char variable[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readString(char variable[], int x, int y, int maxLength, int showPrevious = 0){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
-	clearCoordinates(xi, yi, xf, yf);
+	clearCoordinates(x, yi, x+maxLength, yf);
 	if(showPrevious){
 		strcpy(ancient, variable);
-		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
+		gotoxy(x, yi+2); printf("(Atual: %s)", variable);
 	}
 	fflush(stdin);
-	gotoxy(xi, yi); gets(variable);
+	
+	
+	textbackground(7);
+	for(int i = x; i<x+maxLength; i++){
+		gotoxy(i, y+1);printf(" ");
+	}
+	textbackground(0);
+	
+	variable[0] = '\0';
+	char tecla='0';
+	int pos=0;
+	while(tecla != 13){
+		tecla = getch();
+		
+		if(tecla == 8){ //BASCKSPACE
+			
+			if(pos>0)
+				pos--;
+			variable[pos] = '\0';
+		}else if(tecla != 13 && pos < maxLength){
+			
+			variable[pos] = tecla;
+			variable[pos+1] = '\0';
+			pos++;
+		}
+		clearCoordinates(x, yi, x+maxLength, yf);
+		gotoxy(x, yi); puts(variable);
+	}
+	
+	variable[pos] = '\0';
 	
 	if(showPrevious != 0){
-		clear_untill = xf+10 < 79 ? xf+10 : 79;
-		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clearCoordinates(x, yi+2, clear_untill, yf+2);
 		if(stricmp(variable, "\0") == 0){
-			gotoxy(xi, yi); printf("%s", ancient);
+			gotoxy(x, yi); printf("%s", ancient);
 			strcpy(variable, ancient);
 		}
 	}
+	clearCoordinates(x, yi+1, x+maxLength, yf+1);
 }
 
 
@@ -355,25 +403,32 @@ int maskChar(char caracter){
 /*
 *	@param variable[] char
 *	@param mask[] char
-*	@param xi int
+*	@param x int
 *	@param y int
-*	@param xf int
+*	@param maxLength int
 *	@param showPrevious int default 0
 *
 *	@returnType void
 */
-void readMaskedString(char variable[], const char mask[], int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readMaskedString(char variable[], const char mask[], int xi, int y, int showPrevious = 0){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
 	strcpy(variable, mask);
 	int len = strlen(mask);
-	
+	int xf = xi+len;
 	clearCoordinates(xi, yi, xf, yf);
 	if(showPrevious){
 		strcpy(ancient, variable);
-		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
+		gotoxy(xi, yi+2); printf("(Atual: %s)", variable);
 	}
+	
+	textbackground(7);
+	for(int i = xi; i<xf; i++){
+		gotoxy(i, y+1);printf(" ");
+	}
+	textbackground(0);
+	
 	fflush(stdin);
 	gotoxy(xi, yi);
 	char caracter;
@@ -456,38 +511,42 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int xf,
 		
 	if(showPrevious != 0){
 		clear_untill = xf+10 < 79 ? xf+10 : 79;
-		clearCoordinates(xi, yi+1, clear_untill, yf+1);
+		clearCoordinates(xi, yi+2, clear_untill, yf+2);
 		if(stricmp(variable, "\0") == 0){
 			gotoxy(xi, yi); printf("%s", ancient);
 			strcpy(variable, ancient);
 		}
 	}
+	
+	clearCoordinates(xi, yi+1, xf, yf+1);
 }
 
 /*
 *	@param variable[] char
 *	@param mask char
-*	@param xi int
+*	@param x int
 *	@param y int
-*	@param xf int
+*	@param maxLength int
 *	@param showPrevious int default 0
 *
 *	@returnType void
 */
-void readPassword(char variable[], char mask, int xi, int y, int xf, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
 	strcpy(variable, "\0");
 	
-	clearCoordinates(xi, yi, xf, yf);
-	if(showPrevious){
-		strcpy(ancient, variable);
-		gotoxy(xi, yi+1); printf("(Atual: %s)", variable);
-	}
+	clearCoordinates(x, yi, x+maxLength, yf);
 	fflush(stdin);
 	
-	gotoxy(xi, yi);
+	textbackground(7);
+	for(int i=x; i<x+maxLength; i++){
+		gotoxy(i, y+1);printf(" ");
+	}
+	textbackground(0);
+	
+	gotoxy(x, yi);
 	char tecla='0';
 	int pos=0;
 	while(tecla != 13){
@@ -498,29 +557,22 @@ void readPassword(char variable[], char mask, int xi, int y, int xf, int showPre
 			if(pos>0)
 				pos--;
 			variable[pos] = '\0';
-		}else if(tecla != 13){
+		}else if(tecla != 13 && pos < maxLength){
 			removeToast();
 			
 			variable[pos] = tecla;
 			variable[pos+1] = '\0';
 			pos++;
 		}
-		clearCoordinates(xi, yi, xf, yf);
-		gotoxy(xi, yi); 
+		clearCoordinates(x, yi, x+maxLength, yf);
+		gotoxy(x, yi); 
 		for(int j=0; j<strlen(variable); j++)
 			printf("%c", mask);
 	}
 	
 	variable[pos] = '\0';
-		
-	if(showPrevious != 0){
-		clear_untill = xf+10 < 79 ? xf+10 : 79;
-		clearCoordinates(xi, yi+1, clear_untill, yf+1);
-		if(stricmp(variable, "\0") == 0){
-			gotoxy(xi, yi); printf("%s", ancient);
-			strcpy(variable, ancient);
-		}
-	}
+	
+	clearCoordinates(x, yi+1, x+maxLength, yf+1);
 }
 
 
