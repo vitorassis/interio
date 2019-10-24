@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.0.0
+* version 2.0.3
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -42,7 +42,15 @@ struct canvas{
 }canvasSetting;
 
 
-
+/*
+*	@param border char default '#'
+*	@param notification_area int default 0 (this showss or not the notification area)
+*	@param title_area int default 0 (this showss or not the title area)
+*	@param forecolor int default 7
+*	@param backcolor int default 0
+*	
+*	@returnType void
+*/
 void setCanvas(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0){
 	canvasSetting.border = border;
 	canvasSetting.backcolor = backcolor;
@@ -119,11 +127,6 @@ void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE T
 
 
 /*
-*	@param xi int
-*	@param yi int
-*	@param xf int default 0
-*	@param yf int default 0
-*	
 *	@returnType void
 */                                  
 void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
@@ -134,10 +137,10 @@ void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 
 
 /*
-*	@param xi int
-*	@param yi int
-*	@param xf int default 0
-*	@param yf int default 0
+*	@param start int
+*	@param finish int
+*	@param horizontal int default 0
+*	@param border int default '#'
 *	
 *	@returnType void
 */
@@ -153,10 +156,20 @@ void drawLine(int start, int finish, int coordinate, int horizontal=0, char bord
 }
 
 
+/*
+*	@returnType void
+*/
+void hideCursor(){
+  CONSOLE_CURSOR_INFO cursor = {1, FALSE};
+  SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor);
+}
+
+
 /*	
 *	@returnType void
 */
 void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
+	hideCursor();
 	textcolor(canvasSetting.forecolor);
 	textbackground(canvasSetting.backcolor);
 	
@@ -177,6 +190,7 @@ void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
 *	@returnType void
 */
 void removeToast(){ //REMOVE NOTIFICATION TEXT
+	textbackground(0);
 	clearCoordinates(2, 22, 79, 22);
 }
 
@@ -214,6 +228,7 @@ void showTitle(const char title[], int color=7){
 void showToast(const char texto[], int type=7){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	textcolor(type);
+	textbackground(0);
 	gotoxy(centralize(texto), 22);printf("* %s *", texto);
 	textcolor(7);
 }
@@ -589,7 +604,7 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 	
 	textcolor(7);
 	textbackground(0);
-	clearCoordinates(x, yi+1, x+maxLength, yf+1);
+	clearCoordinates(x, yi, x+maxLength, yf);
 	gotoxy(x, yi); 
 	for(int j=0; j<strlen(variable); j++)
 		printf("%c", mask);
