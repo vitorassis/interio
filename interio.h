@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 1.0.5
+* version 2.0.0
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -15,6 +15,10 @@
 
 #define clearScreen clrscr
 
+#define TOAST_SUCCESS 10
+#define TOAST_WARNING 6
+#define TOAST_ERROR 4
+
 struct menuOption{
 	char option[50];
 	int enabled;
@@ -28,6 +32,24 @@ struct menu{
 	menuOption options[20];
 	int menu_size;
 };
+
+struct canvas{
+	int notification_area;
+	int border;
+	int title_area;
+	int forecolor;
+	int backcolor;
+}canvasSetting;
+
+
+
+void setCanvas(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0){
+	canvasSetting.border = border;
+	canvasSetting.backcolor = backcolor;
+	canvasSetting.forecolor = forecolor;
+	canvasSetting.notification_area = notification_area;
+	canvasSetting.title_area = title_area;
+}
 
 
 /*
@@ -104,8 +126,10 @@ void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE T
 *	
 *	@returnType void
 */                                  
-void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA           
-	clearCoordinates(2, 4, 79, 19);   
+void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
+	int yi = canvasSetting.title_area ? 4 : 2;      
+	int yf = canvasSetting.notification_area ? 19 : 21;
+	clearCoordinates(2, yi, 79, yf);   
 }
 
 
@@ -132,13 +156,21 @@ void drawLine(int start, int finish, int coordinate, int horizontal=0, char bord
 /*	
 *	@returnType void
 */
-void drawCanvas(char border='#', int notification_area=0){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
-	drawLine(1, 80, 1, 0, border); //TOP
-	drawLine(1, 24, 1, 1, border); //LEFT
-	drawLine(1, 80, 24, 0, border); //BOTTOM
-	drawLine(1, 24, 80, 1, border); //RIGHT
-	if(notification_area)
-		drawLine(1, 80, 20, 0, border); //BOTTOM
+void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
+	textcolor(canvasSetting.forecolor);
+	textbackground(canvasSetting.backcolor);
+	
+	drawLine(1, 80, 1, 0, canvasSetting.border); //TOP
+	drawLine(1, 24, 1, 1, canvasSetting.border); //LEFT
+	drawLine(1, 80, 24, 0, canvasSetting.border); //BOTTOM
+	drawLine(1, 24, 80, 1, canvasSetting.border); //RIGHT
+	if(canvasSetting.notification_area)
+		drawLine(1, 80, 20, 0, canvasSetting.border); //BOTTOM
+	if(canvasSetting.title_area)
+		drawLine(1, 80, 3, 0, canvasSetting.border); //TOP
+	textcolor(7);
+	textbackground(0);
+	
 }
 
 /*
@@ -173,9 +205,11 @@ void printCenter(const char text[], int y){
 *	
 *	@returnType void
 */
-void showToast(const char texto[]){ //SHOW NOTIFICATION TEXT
+void showToast(const char texto[], int type=7){ //SHOW NOTIFICATION TEXT
 	removeToast();
+	textcolor(type);
 	gotoxy(centralize(texto), 22);printf("* %s *", texto);
+	textcolor(7);
 }
 
 
