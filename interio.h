@@ -200,6 +200,12 @@ void printCenter(const char text[], int y){
 	gotoxy(centralize(text), y);puts(text);
 }
 
+void showTitle(const char title[], int color=7){
+	textcolor(color);
+	printCenter(title, 2);
+	textcolor(7);
+}
+
 /*
 *	@param texto[] char
 *	
