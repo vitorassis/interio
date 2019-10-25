@@ -251,7 +251,7 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 	if(showPrevious != 0){
 		gotoxy(x, yi+1); printf("(Atual: %d)", showPrevious);
 	}
-	textbackground(7);
+	textbackground(8);
 	textcolor(0);
 	for(int i = x; i<x+maxLength; i++){
 		gotoxy(i, y);printf(" ");
@@ -315,7 +315,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 	if(showPrevious != 0){
 		gotoxy(x, yi+1); printf("(Atual: %.1f)", showPrevious);
 	}
-	textbackground(7);
+	textbackground(8);
 	textcolor(0);
 	for(int i = x; i<x+maxLength; i++){
 		gotoxy(i, y);printf(" ");
@@ -384,7 +384,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 	fflush(stdin);
 	
 	textcolor(0);
-	textbackground(7);
+	textbackground(8);
 	for(int i = x; i<x+maxLength; i++){
 		gotoxy(i, y);printf(" ");
 	}
@@ -456,7 +456,7 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int sho
 	}
 	
 	textcolor(0);
-	textbackground(7);
+	textbackground(8);
 	for(int i = xi; i<xf; i++){
 		gotoxy(i, y);printf(" ");
 	}
@@ -572,7 +572,7 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 	clearCoordinates(x, yi, x+maxLength, yf);
 	fflush(stdin);
 	
-	textbackground(7);
+	textbackground(8);
 	textcolor(0);
 	for(int i=x; i<x+maxLength; i++){
 		gotoxy(i, y);printf(" ");
