@@ -201,7 +201,7 @@ void removeToast(){ //REMOVE NOTIFICATION TEXT
 *	@returnType int => CENTER X
 */
 int centralize(const char texto[]){ //CENTRALIZE TEXT
-	return (78-strlen(texto))/2;
+	return ((78-strlen(texto))/2) +1;
 }
 
 /*
@@ -373,58 +373,102 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 *	@returnType void
 */
 void readString(char variable[], int x, int y, int maxLength, int showPrevious = 0){ //IT SHOWS STRING INPUT
-	int yi, yf=yi=y;
-	int clear_untill;
-	char ancient[40];
-	clearCoordinates(x, yi, x+maxLength, yf);
+	char ancient[maxLength];
+	char tecla='\0';
+	
+	strcpy(ancient, variable);
+	strcpy(variable, "\0");
+	
+	
 	if(showPrevious){
-		strcpy(ancient, variable);
-		gotoxy(x, yi+1); printf("(Atual: %s)", variable);
+		gotoxy(x+1, y+1);printf("(Atual: %s)", ancient);
 	}
-	fflush(stdin);
 	
 	textcolor(0);
 	textbackground(8);
-	for(int i = x; i<x+maxLength; i++){
-		gotoxy(i, y);printf(" ");
-	}
 	
-	variable[0] = '\0';
-	char tecla='0';
+	clearCoordinates(x, y, x+maxLength, y);
+	
+	
 	int pos=0;
+	int size=0;
+	
 	while(tecla != 13){
 		tecla = getch();
 		
-		if(tecla == 8){ //BASCKSPACE
+		switch(tecla){
+			case 8: //backspace
+				if(size > 0){
+					for(int i=pos; i<size; i++)
+						variable[i] = variable[i+1];
+					size--;
+					pos--;
+					variable[size] = '\0';
+				}
+				break;
+			case -32:
+			case 0:
+				tecla = getch();
+				switch(tecla){
+					case 75: //seta pra esquerda
+						if(pos > 0)
+							pos--;
+						break;
+					case 77: //seta pra direita
+						if(pos < size)
+							pos++;
+						break;
+				}
+				break;
 			
-			if(pos>0)
-				pos--;
-			variable[pos] = '\0';
-		}else if(tecla != 13 && pos < maxLength){
+			default:
+				
+				if(size <= maxLength){
+					if(pos != size)
+						for(int i=size; i>pos; i--)
+							variable[i] = variable[i-1];
+							
+					variable[pos] = tecla;
+					size++;
+					pos++;
+					variable[size] = '\0';
+				}
 			
-			variable[pos] = tecla;
-			variable[pos+1] = '\0';
-			pos++;
 		}
-		clearCoordinates(x, yi, x+maxLength, yf);
-		gotoxy(x, yi); puts(variable);
+		
+		gotoxy(x, y);
+		
+		if(tecla!= 13)
+			for(int i=0; i<maxLength; i++){
+				if(i==pos){
+					textcolor(7);
+					textbackground(0);
+				}
+				if(i<size)
+					printf("%c", variable[i]);
+				else
+					printf(" ");
+				if(i==pos){
+					textcolor(0);
+					textbackground(8);
+				}
+			}
+		
 	}
-	
-	variable[pos] = '\0';
-	
 	textbackground(0);
 	textcolor(7);
 	
-	if(showPrevious != 0){
-		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
-		clearCoordinates(x, yi+1, clear_untill, yf+1);
-		if(stricmp(variable, "\0") == 0){
-			gotoxy(x, yi); printf("%s", ancient);
+	if(showPrevious){
+		if(strlen(variable) == 1){
 			strcpy(variable, ancient);
+			size = strlen(ancient);
 		}
+		int clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clearCoordinates(x, y+1, clear_untill, y+1);
 	}
-	clearCoordinates(x, yi, x+maxLength, yf);
-	gotoxy(x, yi); puts(variable);
+	clearCoordinates(x, y, x+maxLength, y);
+	variable[size] = '\0';
+	gotoxy(x, y); printf("%s", variable);
 }
 
 
