@@ -689,7 +689,7 @@ int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS
 				break;
 			case 80:
 				coord = coord+1>menuSettings.max ? menuSettings.min : coord+1;
-				while(!menuSettings.options[coord-menuSettings.min].enabled && coord < menuSettings.max)
+				while(!menuSettings.options[coord-menuSettings.min].enabled && coord <= menuSettings.max)
 					coord++;
 				coord = coord > menuSettings.max ? menuSettings.min : coord;
 		}
