@@ -591,10 +591,10 @@ char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
 		gotoxy(x+1, y+1);printf("(Atual: %c)", showPrevious);
 	}
 	
-	textcolor(0);
+	textcolor(0)
 	textbackground(8);
 	
-	clearCoordinates(x, y, x+1, y);
+	clearCoordinates(x, y, x, y);
 	
 	char tecla = 0;
 	int again=1;
@@ -627,7 +627,7 @@ char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
 		clear_untill = x+1+10 < 79 ? x+1+10 : 79;
 		clearCoordinates(x, y+1, clear_untill, y+1);
 	}	
-	clearCoordinates(x, y, x+1, y);
+	clearCoordinates(x, y, x, y);
 	int retorno = showPrevious ? tecla == 13 ? showPrevious : tecla : tecla;
 	gotoxy(x, y); printf("%c",retorno);
 	
