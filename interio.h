@@ -532,7 +532,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 			
 			default:
 				
-				if(size <= maxLength){
+				if(size <= maxLength && tecla !=13){
 					if(pos != size)
 						for(int i=size; i>pos; i--)
 							variable[i] = variable[i-1];
@@ -591,7 +591,7 @@ char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
 		gotoxy(x+1, y+1);printf("(Atual: %c)", showPrevious);
 	}
 	
-	textcolor(0)
+	textcolor(0);
 	textbackground(8);
 	
 	clearCoordinates(x, y, x, y);
