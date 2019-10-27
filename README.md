@@ -1,7 +1,7 @@
  # Interface I/O C
 
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.0.3
+* version 2.1.0
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, please, comment and share it.
