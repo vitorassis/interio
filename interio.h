@@ -19,6 +19,7 @@
 #define TOAST_WARNING 6
 #define TOAST_ERROR 4
 
+//INICIO STRUCT MENU
 struct menuOption{
 	char option[50];
 	int enabled;
@@ -32,7 +33,9 @@ struct menu{
 	menuOption options[20];
 	int menu_size;
 };
+//FIM STRUCT MENU
 
+//INICIO STRUCT CANVAS
 struct canvas{
 	int notification_area;
 	int border;
@@ -40,7 +43,107 @@ struct canvas{
 	int forecolor;
 	int backcolor;
 }canvasSetting;
+//FIM STRUCT CANVAS
 
+//INICIO STRUCT SCOLLPANE
+struct paneItem{
+	int x;
+	int y;
+	char text[100];
+	int active;
+};
+
+struct scrollPane{
+	int current_y;
+	int max_y;
+	int size_items;
+	paneItem items[300];
+};
+//FIM STRUCT SCROLLPANE
+
+
+/*
+*	@returnType scrollPane
+*/
+scrollPane setScrollPane(){
+	scrollPane _new;
+	_new.current_y = 0;
+	_new.max_y = 0;
+	_new.size_items = 0;
+	
+	return _new;
+}
+
+/*
+*	@param pane ScrollPane
+*	@param x int
+*	@param y int
+*	@param text[] const char
+*
+*	@returnType void
+*/
+void addScrollItem(scrollPane &pane, int x, int y, const char text[]){
+	paneItem item;
+	item.x = x;
+	item.y = y;
+	strcpy(item.text, text);
+	item.active = 1;
+	printf("1");
+	int pos;
+	for(pos=0; pos<pane.size_items && pane.items[pos].y > item.y; pos++);
+	
+	printf("2");
+	for(int i=pane.size_items; i>pos; i--)
+		pane.items[i+1] = pane.items[i];
+	
+	printf("3");	
+	pane.items[pos] = item;
+	pane.size_items++;
+	
+	printf("4");
+	pane.max_y = pane.items[pane.size_items].y;
+}
+
+/*
+*	@param pane ScrollPane
+*
+*	@returnType void
+*/
+void showScrollPane(scrollPane pane){
+	int tecla = '\0';
+	pane.current_y = 4;
+	int index = 0;
+	do{
+		for(int line = pane.current_y; line<pane.current_y+16; line++){
+			printf("%d", line);
+			for(index = 0; pane.items[index].y != pane.current_y; index++);
+			
+			for(index; pane.items[index].y == line && index < pane.size_items; index++){
+				gotoxy(pane.items[index].x, pane.items[index].y - pane.current_y);
+				printf("%s", pane.items[index].text);
+			}
+		}
+	
+		tecla = getch();
+			
+		switch(tecla){
+			case -32:
+				tecla = getch();
+				
+				switch(tecla){
+					case 73:
+						if(pane.current_y > 5)
+							pane.current_y--;
+						break;
+					case 81:
+						if(pane.current_y < pane.max_y)
+							pane.current_y++;
+						break;
+				}
+				break;
+		}
+	}while(tecla != 27);
+}
 
 /*
 *	@param border char default '#'
@@ -398,8 +501,8 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 		
 		switch(tecla){
 			case 8: //backspace
-				if(size > 0){
-					for(int i=pos; i<size; i++)
+				if(size > 0 && pos > 0){
+					for(int i=pos-1; i<size; i++)
 						variable[i] = variable[i+1];
 					size--;
 					pos--;
@@ -410,6 +513,9 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 			case 0:
 				tecla = getch();
 				switch(tecla){
+					case 71: //home
+						pos = 0;
+						break;
 					case 75: //seta pra esquerda
 						if(pos > 0)
 							pos--;
@@ -417,6 +523,9 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 					case 77: //seta pra direita
 						if(pos < size)
 							pos++;
+						break;
+					case 79: //end
+						pos = size;
 						break;
 				}
 				break;
@@ -470,6 +579,61 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 	variable[size] = '\0';
 	gotoxy(x, y); printf("%s", variable);
 }
+
+
+/*
+*	@param x int 
+*	@param y int
+*	@param showPrevious default 0
+*/
+char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
+	if(showPrevious){
+		gotoxy(x+1, y+1);printf("(Atual: %c)", showPrevious);
+	}
+	
+	textcolor(0);
+	textbackground(8);
+	
+	clearCoordinates(x, y, x+1, y);
+	
+	char tecla = 0;
+	int again=1;
+	
+	gotoxy(x, y);
+	do{
+		if(again)
+			tecla = getch();
+		
+		switch(tecla) {
+			case -32:
+			case 0:
+				tecla = getch();
+				again = 1;
+				break;
+			default:
+				again = 0;
+		}
+	}while(again);	
+	
+	textcolor(7);
+	textbackground(0);
+	
+	int clear_untill;
+	
+	if(showPrevious != 0){
+		if(tecla == 13){
+			gotoxy(x, y); printf("%c", showPrevious);
+		}
+		clear_untill = x+1+10 < 79 ? x+1+10 : 79;
+		clearCoordinates(x, y+1, clear_untill, y+1);
+	}	
+	clearCoordinates(x, y, x+1, y);
+	int retorno = showPrevious ? tecla == 13 ? showPrevious : tecla : tecla;
+	gotoxy(x, y); printf("%c",retorno);
+	
+	return retorno;
+}
+
 
 
 int maskChar(char caracter){
