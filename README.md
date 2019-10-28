@@ -17,7 +17,7 @@
 
 ### setCanvas(char, int, int, int, int) : void
 
-Must be called before `drawCanvas()`, explaned after, in order to configure it.
+Must be called before `drawCanvas()`, explaned below, in order to configure it.
 
 Receives:
 ```
@@ -27,6 +27,24 @@ int title_area flag default 0
 int forecolor default 7
 int backcolor default 0
 ```
+Returns:
+```
+void
+```
+
+### drawCanvas() : void
+
+It draws the canvas following the parameters sent in `setCanvas()` method
+
+Returns:
+```
+void
+```
+
+### clearCanvas() : void
+
+It clears inside the Canvas area (setted up in `setCanvas()`).
+
 Returns:
 ```
 void
@@ -75,6 +93,19 @@ Returns:
 void
 ```
 
+### showMenu(menu) : int
+
+It show menu and returns the position the user entered, it will be the index of the option.
+
+Receives:
+```
+menu menuSettings
+```
+Returns:
+```
+int
+```
+
 ### clearCoordinates(int, int, int, int) : void
 
 Clear the screen inside the sent rectangle.
@@ -87,15 +118,6 @@ int yi
 int xf default 0
 int yf default 0
 ```
-Returns:
-```
-void
-```
-
-### clearCanvas() : void
-
-It clears inside the Canvas area (setted up in `setCanvas()`).
-
 Returns:
 ```
 void
@@ -127,10 +149,21 @@ Returns:
 void
 ```
 
-### drawCanvas() : void
+### showToast(const char [], int) : void
 
-It draws the canvas following the parameters sent in `setCanvas()` method
+It shows the toast notification.
 
+Toasts' type can be:
+
+1. TOAST_SUCCESS
+1. TOAST_FAILED
+1. TOAST_WARNING
+
+Receives:
+```
+const char text[]
+int type default 7
+```
 Returns:
 ```
 void
@@ -186,25 +219,6 @@ Returns:
 void
 ```
 
-### showToast(const char [], int) : void
-
-It shows the toast notification.
-
-Toasts' type can be:
-
-1. TOAST_SUCCESS
-1. TOAST_FAILED
-1. TOAST_WARNING
-
-Receives:
-```
-const char text[]
-int type default 7
-```
-Returns:
-```
-void
-```
 
 ### readInt(int, int, int, int) : int
 
@@ -322,18 +336,7 @@ Returns:
 void
 ```
 
-### showMenu(menu) : int
 
-It show menu and returns the position the user entered, it will be the index of the option.
-
-Receives:
-```
-menu menuSettings
-```
-Returns:
-```
-int
-```
 
 ## Example:
 
