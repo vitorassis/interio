@@ -254,7 +254,7 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 	int clear_untill;
 	clearCoordinates(x, yi, x+maxLength, yf);
 	if(showPrevious != 0){
-		gotoxy(x, yi+1); printf("(Atual: %d)", showPrevious);
+		gotoxy(x, yi+1); printf("(%d)", showPrevious);
 	}
 	textbackground(8);
 	textcolor(0);
@@ -318,7 +318,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 	int clear_untill;
 	clearCoordinates(x, yi, x+maxLength, yf);
 	if(showPrevious != 0){
-		gotoxy(x, yi+1); printf("(Atual: %.1f)", showPrevious);
+		gotoxy(x, yi+1); printf("(%.1f)", showPrevious);
 	}
 	textbackground(8);
 	textcolor(0);
@@ -386,7 +386,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 	
 	
 	if(showPrevious){
-		gotoxy(x+1, y+1);printf("(Atual: %s)", ancient);
+		gotoxy(x+1, y+1);printf("(%s)", ancient);
 	}
 	
 	textcolor(0);
@@ -490,7 +490,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 */
 char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
 	if(showPrevious){
-		gotoxy(x+1, y+1);printf("(Atual: %c)", showPrevious);
+		gotoxy(x+1, y+1);printf("(%c)", showPrevious);
 	}
 	
 	textcolor(0);
@@ -562,7 +562,7 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int sho
 	int xf = xi+len;
 	clearCoordinates(xi, yi, xf, yf);
 	if(showPrevious){
-		gotoxy(xi, yi+1); printf("(Atual: %s)", ancient);
+		gotoxy(xi, yi+1); printf("(%s)", ancient);
 	}
 	
 	textcolor(0);
