@@ -278,19 +278,20 @@ char
 
 It requests a masked string input.
 Send 1 in `showPrevious` and it will enable the edit ancient value feature.
-
+```
 Masks char:
 
 'd' => digit
 'a' => lower alpha
 'A' => upper alpha
 'x' => all the above
-
+```
+```
 Masks examples:
 
 "AAA-dddd" => Acceptable value : "DEA-1234"
 "a.dt xA"  => Acceptable value : "f.5t gR"
-
+```
 Receives:
 ```
 char variable[]
