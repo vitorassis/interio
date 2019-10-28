@@ -226,15 +226,15 @@ void showTitle(const char title[], int color=7){
 }
 
 /*
-*	@param texto[] char
+*	@param text[] char
 *	
 *	@returnType void
 */
-void showToast(const char texto[], int type=7){ //SHOW NOTIFICATION TEXT
+void showToast(const char text[], int type=7){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	textcolor(type);
 	textbackground(0);
-	gotoxy(centralize(texto), 22);printf("* %s *", texto);
+	gotoxy(centralize(text), 22);printf("* %s *", text);
 	textcolor(7);
 }
 
