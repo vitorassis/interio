@@ -470,7 +470,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 	textcolor(7);
 	
 	if(showPrevious){
-		if(strlen(variable) == 1){
+		if(strlen(variable) == 0){
 			strcpy(variable, ancient);
 			size = strlen(ancient);
 		}
