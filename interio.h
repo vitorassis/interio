@@ -45,8 +45,6 @@ struct canvas{
 }canvasSetting;
 //FIM STRUCT CANVAS
 
-
-
 /*
 *	@param border char default '#'
 *	@param notification_area int default 0 (this showss or not the notification area)
@@ -410,6 +408,8 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 					pos--;
 					variable[size] = '\0';
 				}
+				break;
+			case 9: //tab
 				break;
 			case -32:
 			case 0:
