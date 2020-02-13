@@ -11,7 +11,7 @@
 1. Download this or clone.
 1. Put interio.h with your source
 1. Then: `#include "interio.h"`
-1. You are ready to code with it!
+1. You are ready to code it!
 
 ## Functions:
 
