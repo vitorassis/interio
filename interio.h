@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.0.3
+* version 2.1.0
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -44,8 +44,6 @@ struct canvas{
 	int backcolor;
 }canvasSetting;
 //FIM STRUCT CANVAS
-
-
 
 /*
 *	@param border char default '#'
@@ -411,6 +409,8 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 					variable[size] = '\0';
 				}
 				break;
+			case 9: //tab
+				break;
 			case -32:
 			case 0:
 				tecla = getch();
@@ -470,7 +470,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 	textcolor(7);
 	
 	if(showPrevious){
-		if(strlen(variable) == 0){
+		if(strlen(variable) == 1){
 			strcpy(variable, ancient);
 			size = strlen(ancient);
 		}
@@ -726,20 +726,24 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 *	
 *	@returnType int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED)
 */
-int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
+int showMenu(menu menuSettings, int option=0){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
 	int coord;
 	int y;
-	for(y=0; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
+	for(y=option; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
 	
 	coord = menuSettings.min + y;
-	
 	menuSettings.max = menuSettings.min + menuSettings.menu_size-1;
 	char tecla;
 	
 	clearCoordinates(menuSettings.x, menuSettings.min, menuSettings.x+25, menuSettings.max);
 	
 	for(int i=0; i<menuSettings.menu_size; i++){
-		gotoxy(menuSettings.x, i+menuSettings.min);printf("%s", menuSettings.options[i].option);
+		gotoxy(menuSettings.x, i+menuSettings.min);
+		if(!menuSettings.options[i].enabled)
+			textcolor(4);
+		printf("%s", menuSettings.options[i].option);
+		if(!menuSettings.options[i].enabled)
+			textcolor(7);
 	}
 	do{
 		gotoxy(menuSettings.x-2, coord);printf("%c", menuSettings.cursor);

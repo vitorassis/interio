@@ -14,31 +14,27 @@ int main(){
 	addMenuOption(mainMenu, "Exit");
 	
 	int coord;
-	char string_coord[2];
 	
 	do{
 		coord = showMenu(mainMenu); // THIS DRAWS MENU AND GETS COORD WHEN USER PRESSES ENTER
 		
-		itoa(coord, string_coord, 10);
-		
-		showToast(string_coord); // IT SHOWS ON NOTIFICATION AREA WHICH OPTION HAVE BEEN SELECTED
+		showToast("You selected some option"); // IT SHOWS ON NOTIFICATION AREA WHICH OPTION HAVE BEEN SELECTED
 		
 		switch(coord){
 			case 0:
-				char user[10];
-				char psswd[15];
-				clearCanvas();
+				char user[10], psswd[15];
+				clearCanvas(); // IT CLEANS THE AREA INSIDE THE CANVAS, NEVER OUTSIDE
 				printCenter("Login", 9);
 				gotoxy(30, 11);printf("User: ");
 				gotoxy(30, 12);printf("Password: ");
 				do{
-					readString(user, 36, 11, 10);
+					readString(user, 36, 11, 10); //(STRING_VAR, X_POS, Y_POS, MAX_LENGTH)
 					if(strlen(user) == 0)
 						showToast("User is null", TOAST_ERROR);
 				}while(strlen(user) == 0);
 				removeToast();
 				do{
-					readPassword(psswd, '*', 40, 12, 15);
+					readPassword(psswd, '*', 40, 12, 15); //(STRING_VAR, MASK, X_POS, Y_POS, MAX_LENGTH)
 					if(strlen(psswd) == 0)
 						showToast("Password is null", TOAST_ERROR);
 					else if(strlen(psswd) < 8)

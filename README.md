@@ -21,7 +21,7 @@ Must be called before `drawCanvas()`, explaned below, in order to configure it.
 
 Receives:
 ```
-char border default '#'
+char border default '>'
 int notification_area default 0
 int title_area flag default 0
 int forecolor default 7
