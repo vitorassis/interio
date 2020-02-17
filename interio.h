@@ -45,6 +45,54 @@ struct canvas{
 }canvasSetting;
 //FIM STRUCT CANVAS
 
+//INICIO STRUCT BREADCRUMB
+struct breadcrumb{
+	breadcrumb *previous;
+	char text[20];
+	int pos;
+};
+//FIM STRUCT BREADCRUMB
+
+/*
+*	@param text char[]
+*	@param prev breadcrumb* default NULL
+*	
+*	@returnType breadcrumb
+*/
+breadcrumb setBreadcrumb(const char text[], breadcrumb *prev=NULL){
+	breadcrumb bread;
+	strcpy(bread.text, text);
+	bread.previous = prev;
+	
+	if(prev == NULL)
+		bread.pos = 0;
+	else
+		bread.pos = bread.previous->pos+1;
+	
+	
+	return bread;
+}
+
+/*
+*	@param bread breadcrumb
+*	@param y int
+*	
+*	@returnType int
+*/
+int showBreadcrumbs(breadcrumb bread, int &y){
+	if(y < 4) y=4;
+	int x = 4;
+	if(bread.pos != 0)
+		x = showBreadcrumbs(*bread.previous, y);
+	if(x >= 70){
+		x=4; y++;
+	}
+	gotoxy(x, y); printf("%s%s", (bread.pos != 0 ? " > ": ""), bread.text);
+	
+	x += strlen(bread.text)+(bread.pos != 0 ? 3 : 0);
+	return x;
+}
+
 /*
 *	@param border char default '#'
 *	@param notification_area int default 0 (this showss or not the notification area)
