@@ -5,17 +5,25 @@ int main(){
 	setCanvas('#', 1, 0, 2, 0); //border, notification_area, title_area, textcolor, backgroundcolor
 	showTitle("Title");
 	drawCanvas(); // IT DRAWS A FRAME FOR YOUR APPLICATION
+	breadcrumb home = setBreadcrumb("Home");
 	
 	printCenter("Menu", 9);
+	
 	
 	menu mainMenu = setMenu(10); // CREATES A NEW MENU VARIABLE setMenu(int yStart)
 	addMenuOption(mainMenu, "Option 1 (Login)", 1); // FIRSTLY THE MENU, SECONDLY THE LABEL AND, FINALLY, THE ENABLED
 	addMenuOption(mainMenu, "Option 2 (Disabled)", 0); //THIS OPTION IS DISABLED
 	addMenuOption(mainMenu, "Exit");
 	
+	breadcrumb option1 = setBreadcrumb("Option 1", &home);
+	
 	int coord;
 	
 	do{
+		clearCanvas();
+	
+		showBreadcrumbs(home);
+	
 		coord = showMenu(mainMenu); // THIS DRAWS MENU AND GETS COORD WHEN USER PRESSES ENTER
 		
 		showToast("You selected some option"); // IT SHOWS ON NOTIFICATION AREA WHICH OPTION HAVE BEEN SELECTED
@@ -24,6 +32,7 @@ int main(){
 			case 0:
 				char user[10], psswd[15];
 				clearCanvas(); // IT CLEANS THE AREA INSIDE THE CANVAS, NEVER OUTSIDE
+				showBreadcrumbs(option1);
 				printCenter("Login", 9);
 				gotoxy(30, 11);printf("User: ");
 				gotoxy(30, 12);printf("Password: ");
