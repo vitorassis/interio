@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.0.3
+* version 2.1.0
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -45,10 +45,58 @@ struct canvas{
 }canvasSetting;
 //FIM STRUCT CANVAS
 
+//INICIO STRUCT BREADCRUMB
+struct breadcrumb{
+	breadcrumb *previous;
+	char text[20];
+	int pos;
+};
+//FIM STRUCT BREADCRUMB
+
+/*
+*	@param text char[]
+*	@param prev breadcrumb* default NULL
+*	
+*	@returnType breadcrumb
+*/
+breadcrumb setBreadcrumb(const char text[], breadcrumb *prev=NULL){
+	breadcrumb bread;
+	strcpy(bread.text, text);
+	bread.previous = prev;
+	
+	if(prev == NULL)
+		bread.pos = 0;
+	else
+		bread.pos = bread.previous->pos+1;
+	
+	
+	return bread;
+}
+
+/*
+*	@param bread breadcrumb
+*	@param y int
+*	
+*	@returnType int
+*/
+int showBreadcrumbs(breadcrumb bread, int &y){
+	if(y < 4) y=4;
+	int x = 4;
+	if(bread.pos != 0)
+		x = showBreadcrumbs(*bread.previous, y);
+	if(x >= 70){
+		x=4; y++;
+	}
+	gotoxy(x, y); printf("%s%s", (bread.pos != 0 ? " > ": ""), bread.text);
+	
+	x += strlen(bread.text)+(bread.pos != 0 ? 3 : 0);
+	return x;
+}
+
 /*
 *	@param border char default '#'
 *	@param notification_area int default 0 (this showss or not the notification area)
-*	@param title_area int default 0 (this showss or not the title area)
+*	@param title_area int default 0 (this shows or not the title area)
 *	@param forecolor int default 7
 *	@param backcolor int default 0
 *	
@@ -726,20 +774,24 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 *	
 *	@returnType int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED)
 */
-int showMenu(menu menuSettings){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
+int showMenu(menu menuSettings, int option=0){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
 	int coord;
 	int y;
-	for(y=0; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
+	for(y=option; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
 	
 	coord = menuSettings.min + y;
-	
 	menuSettings.max = menuSettings.min + menuSettings.menu_size-1;
 	char tecla;
 	
 	clearCoordinates(menuSettings.x, menuSettings.min, menuSettings.x+25, menuSettings.max);
 	
 	for(int i=0; i<menuSettings.menu_size; i++){
-		gotoxy(menuSettings.x, i+menuSettings.min);printf("%s", menuSettings.options[i].option);
+		gotoxy(menuSettings.x, i+menuSettings.min);
+		if(!menuSettings.options[i].enabled)
+			textcolor(4);
+		printf("%s", menuSettings.options[i].option);
+		if(!menuSettings.options[i].enabled)
+			textcolor(7);
 	}
 	do{
 		gotoxy(menuSettings.x-2, coord);printf("%c", menuSettings.cursor);
