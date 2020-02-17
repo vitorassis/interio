@@ -1,7 +1,7 @@
  # Interface I/O C
 
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.1.0
+* version 2.1.5
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, please, comment and share it.
@@ -219,6 +219,33 @@ Returns:
 void
 ```
 
+
+### setBreadcrumb(const char [], breadcrumb*) : breadcrumb
+
+It creates a breadcrumb
+
+Receives:
+```
+const char text []
+breadcrumb *prev default NULL
+```
+Returns:
+```
+breadcrumb
+```
+
+### showBreadcrumbs(breadcrumb) : void
+
+It shows the complete breadcrumb
+
+Receives:
+```
+breadcrumb bread
+```
+Returns:
+```
+void
+```
 
 ### readInt(int, int, int, int) : int
 

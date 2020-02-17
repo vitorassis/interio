@@ -73,17 +73,10 @@ breadcrumb setBreadcrumb(const char text[], breadcrumb *prev=NULL){
 	return bread;
 }
 
-/*
-*	@param bread breadcrumb
-*	@param y int
-*	
-*	@returnType int
-*/
-int showBreadcrumbs(breadcrumb bread, int &y){
-	if(y < 4) y=4;
-	int x = 4;
+int showBreadcrumb(breadcrumb bread, int &y){
+	int x=4;
 	if(bread.pos != 0)
-		x = showBreadcrumbs(*bread.previous, y);
+		x = showBreadcrumb(*bread.previous, y);
 	if(x >= 70){
 		x=4; y++;
 	}
@@ -91,6 +84,18 @@ int showBreadcrumbs(breadcrumb bread, int &y){
 	
 	x += strlen(bread.text)+(bread.pos != 0 ? 3 : 0);
 	return x;
+}
+
+/*
+*	@param bread breadcrumb
+*	@param y int
+*	
+*	@returnType int
+*/
+void showBreadcrumbs(breadcrumb bread){
+	int y = 4;
+	int x = 4;
+	showBreadcrumb(bread, y);
 }
 
 /*
