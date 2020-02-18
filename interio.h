@@ -42,6 +42,8 @@ struct canvas{
 	int title_area;
 	int forecolor;
 	int backcolor;
+	int width;
+	int height;
 }canvasSetting;
 //FIM STRUCT CANVAS
 
@@ -98,6 +100,18 @@ void showBreadcrumbs(breadcrumb bread){
 	showBreadcrumb(bread, y);
 }
 
+int getScreenWidth(){
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+}
+
+int getScreenHeight(){
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+}
+
 /*
 *	@param border char default '#'
 *	@param notification_area int default 0 (this showss or not the notification area)
@@ -108,11 +122,15 @@ void showBreadcrumbs(breadcrumb bread){
 *	@returnType void
 */
 void setCanvas(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0){
+	void hideCursor();
 	canvasSetting.border = border;
 	canvasSetting.backcolor = backcolor;
 	canvasSetting.forecolor = forecolor;
 	canvasSetting.notification_area = notification_area;
 	canvasSetting.title_area = title_area;
+	canvasSetting.width = getScreenWidth();
+	canvasSetting.height = getScreenHeight()-1;
+	hideCursor();
 }
 
 
@@ -123,10 +141,13 @@ void setCanvas(char border='#', int notification_area=0, int title_area=0, int f
 *	
 *	@returnType menu
 */
-menu setMenu(int yStart, int x=30, char cursor='>'){ //IT INITIALIZES THE MENU OBJECT
+menu setMenu(int yStart, int x=0, char cursor='>'){ //IT INITIALIZES THE MENU OBJECT
+	int centralize (const char[]);
 	menu _menu;
 	_menu.min = yStart;
 	_menu.x = x;
+	if(x == 0)
+		_menu.x = centralize("example option");
 	_menu.cursor = cursor;
 	_menu.menu_size = 0;
 	return _menu;
@@ -187,8 +208,8 @@ void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE T
 */                                  
 void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 	int yi = canvasSetting.title_area ? 4 : 2;      
-	int yf = canvasSetting.notification_area ? 19 : 21;
-	clearCoordinates(2, yi, 79, yf);   
+	int yf =  canvasSetting.height - (canvasSetting.notification_area ? 5 : 3);
+	clearCoordinates(2, yi, canvasSetting.width-1, yf);   
 }
 
 
@@ -229,14 +250,14 @@ void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
 	textcolor(canvasSetting.forecolor);
 	textbackground(canvasSetting.backcolor);
 	
-	drawLine(1, 80, 1, 0, canvasSetting.border); //TOP
-	drawLine(1, 24, 1, 1, canvasSetting.border); //LEFT
-	drawLine(1, 80, 24, 0, canvasSetting.border); //BOTTOM
-	drawLine(1, 24, 80, 1, canvasSetting.border); //RIGHT
+	drawLine(1, canvasSetting.width, 1, 0, canvasSetting.border); //TOP
+	drawLine(1, canvasSetting.height, 1, 1, canvasSetting.border); //LEFT
+	drawLine(1, canvasSetting.width, canvasSetting.height, 0, canvasSetting.border); //BOTTOM
+	drawLine(1, canvasSetting.height, canvasSetting.width, 1, canvasSetting.border); //RIGHT
 	if(canvasSetting.notification_area)
-		drawLine(1, 80, 20, 0, canvasSetting.border); //BOTTOM
+		drawLine(1, canvasSetting.width, canvasSetting.height-4, 0, canvasSetting.border); //BOTTOM
 	if(canvasSetting.title_area)
-		drawLine(1, 80, 3, 0, canvasSetting.border); //TOP
+		drawLine(1, canvasSetting.width, 3, 0, canvasSetting.border); //TOP
 	textcolor(7);
 	textbackground(0);
 	
@@ -247,7 +268,7 @@ void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
 */
 void removeToast(){ //REMOVE NOTIFICATION TEXT
 	textbackground(0);
-	clearCoordinates(2, 22, 79, 22);
+	clearCoordinates(2, canvasSetting.height-2, canvasSetting.width-1, canvasSetting.height-1);
 }
 
 
@@ -257,7 +278,7 @@ void removeToast(){ //REMOVE NOTIFICATION TEXT
 *	@returnType int => CENTER X
 */
 int centralize(const char texto[]){ //CENTRALIZE TEXT
-	return ((78-strlen(texto))/2) +1;
+	return (((canvasSetting.width-2)-strlen(texto))/2) +1;
 }
 
 /*
@@ -285,7 +306,7 @@ void showToast(const char text[], int type=7){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	textcolor(type);
 	textbackground(0);
-	gotoxy(centralize(text), 22);printf("* %s *", text);
+	gotoxy(centralize(text), canvasSetting.height-2);printf("* %s *", text);
 	textcolor(7);
 }
 
@@ -326,7 +347,7 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 			if(pos>0)
 				pos--;
 			aux[pos] = '\0';
-		}else if(tecla != 13 && isdigit(tecla) && pos < sizeInt){
+		}else if(tecla != 13 && (isdigit(tecla) || (pos == 0 && tecla == '-')) && pos < sizeInt){
 			
 			aux[pos] = tecla;
 			aux[pos+1] = '\0';
@@ -344,7 +365,7 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 		if(stricmp(aux, "\0") == 0){
 			gotoxy(x, yi); printf("%d", showPrevious);
 		}
-		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clear_untill = x+maxLength+10 < canvasSetting.width-1 ? x+maxLength+10 : canvasSetting.width-1;
 		clearCoordinates(x, yi+1, clear_untill, yf+1);
 	}	
 	clearCoordinates(x, y, x+maxLength, y);
@@ -391,7 +412,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 			if(pos>0)
 				pos--;
 			aux[pos] = '\0';
-		}else if(tecla != 13 && (isdigit(tecla) || tecla == '.') && pos < sizeFloat){
+		}else if(tecla != 13 && (isdigit(tecla) || tecla == '.' || (pos == 0 && tecla == '-')) && pos < sizeFloat){
 			
 			aux[pos] = tecla;
 			aux[pos+1] = '\0';
@@ -408,7 +429,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 		if(stricmp(aux, "\0") == 0){
 			gotoxy(x, yi); printf("%.1f", showPrevious);
 		}
-		clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		clear_untill = x+maxLength+10 < canvasSetting.width-1 ? x+maxLength+10 : canvasSetting.width-1;
 		clearCoordinates(x, yi+1, clear_untill, yf+1);
 	}
 	clearCoordinates(x, yi, clear_untill, yf);
@@ -527,7 +548,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 			strcpy(variable, ancient);
 			size = strlen(ancient);
 		}
-		int clear_untill = x+maxLength+10 < 79 ? x+maxLength+10 : 79;
+		int clear_untill = x+maxLength+10 < canvasSetting.width-1 ? x+maxLength+10 : canvasSetting.width-1;
 		clearCoordinates(x, y+1, clear_untill, y+1);
 	}
 	clearCoordinates(x, y, x+maxLength, y);
@@ -705,7 +726,7 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int sho
 	variable[pos] = '\0';
 		
 	if(showPrevious != 0){
-		clear_untill = xf+10 < 79 ? xf+10 : 79;
+		clear_untill = xf+10 < canvasSetting.width-1 ? xf+10 : canvasSetting.width-1;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
 		if(stricmp(variable, "\0") == 0){
 			gotoxy(xi, yi); printf("%s", ancient);
