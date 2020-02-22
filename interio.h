@@ -1,6 +1,6 @@
 /*
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.1.5
+* version 2.2.0
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -54,6 +54,166 @@ struct breadcrumb{
 	int pos;
 };
 //FIM STRUCT BREADCRUMB
+
+//INICIO STRUCT SCROLLPANE
+struct paneLineItem{
+	int x;
+	char text[40];
+};
+struct paneLine{
+	int y;
+	int real_y;
+	
+	paneLineItem items[5];
+	int qtty_items;
+};
+struct scrollPane{
+	int top;
+	int bottom;
+	
+	paneLine lines[300];
+	int qtty_lines;
+};
+//FIM STRUCT SCROLLPANE
+
+scrollPane setScrollPane(){
+	scrollPane scroll;
+	scroll.top = 4;
+	scroll.bottom = canvasSetting.height-5;
+	scroll.qtty_lines = 0;
+	
+	return scroll;
+}
+paneLine setPaneLine(int y){
+	paneLine line;
+	line.y = line.real_y = y;
+	if(line.y > canvasSetting.height -5)
+		line.y = canvasSetting.height -5;
+	line.qtty_items = 0;
+	
+	return line;
+}
+paneLineItem setPanelLineItem(int x, const char text[]){
+	paneLineItem item;
+	item.x = x;
+	strcpy(item.text, text);
+	
+	return item;
+}
+int addPaneLine(scrollPane &pane, int y){
+	if (pane.lines[y].qtty_items != 0)
+		return -1;
+	
+	pane.lines[y] = setPaneLine(y);
+	pane.qtty_lines = (y >= pane.qtty_lines) ? y+1 : pane.qtty_lines;
+	
+	return y;
+}
+int addPaneLineItem(scrollPane &pane, int x, int y, const char text[]){
+	addPaneLine(pane, y);
+	pane.lines[y].items[pane.lines[y].qtty_items] = setPanelLineItem(x, text);
+	pane.lines[y].qtty_items++;
+	
+	return 1;		
+}
+void showScrollPane(scrollPane pane){
+	void clearCanvas();
+	void showToast(const char[], int type=7);
+	void drawLine(int, int, int, int horizontal=0, char border='*');
+	void clearCoordinates(int, int, int xf=0, int yf=0);
+	
+	char tecla;
+	
+	int move =1, ancient_top, barPos;
+	clearCanvas();
+	
+	int barSize = ((float)pane.lines[pane.qtty_lines-1].y-8	)/((pane.qtty_lines-8))*(pane.lines[pane.qtty_lines-1].y-8) -1;
+	int percInit=0, percFin=canvasSetting.height-8;
+	showToast("[ESC] para sair", TOAST_WARNING);
+	do{
+		
+		if(move){
+			barPos = 4+ (pane.lines[pane.qtty_lines-1].y-8)* ((float)(barSize)*(pane.top-4))/100;
+			
+			gotoxy(3, canvasSetting.height-5);
+			printf("(%d%% - %d%%)", 
+				percInit*100/(pane.qtty_lines-1), percFin*100/(pane.qtty_lines-1) > 100 ? 100 : percFin*100/(pane.qtty_lines-1)
+			);
+			
+			textbackground(8);
+			drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
+			textbackground(0);
+			for(int i=pane.top; i < pane.qtty_lines && pane.lines[i].real_y<=pane.top + canvasSetting.height-9; i++){
+				for(int j=0; j < pane.lines[i].qtty_items; j++){
+					gotoxy(pane.lines[i].items[j].x, 
+						(pane.lines[i].y + pane.lines[i].real_y-pane.lines[i].y)-pane.top+4
+					);
+					printf("%s", pane.lines[i].items[j].text);
+				}
+			}
+		}
+			
+		move = 0;
+		ancient_top = pane.top;
+		tecla=getch();
+		switch(tecla){
+			case -32:
+			case 0:
+				tecla = getch();
+				switch(tecla){
+					case 72:		//UP
+						pane.top--;
+						if(pane.top < 4)
+							pane.top = 4;
+						else{
+							move = 1;	
+							percInit --;
+							percFin --;
+						}
+						break;
+					case 80:		//DOWN
+						pane.top++;
+						if(pane.top+canvasSetting.height-9 >= pane.qtty_lines)
+							pane.top--;
+						else{
+							move = 1;	
+							percInit ++;
+							percFin ++;
+						}
+						break;
+					case 73:		//PG_UP
+						pane.top -= canvasSetting.height;
+						if(pane.top < 4)
+							pane.top = 4;
+						move = 1;
+						break;
+					case 81:		//PG_DOWN
+						pane.top+= canvasSetting.height;
+						if(pane.top+canvasSetting.height-9 >= pane.qtty_lines)
+							pane.top-= canvasSetting.height;
+						move = 1;
+						break;
+				}
+				if(move){				
+					clearCoordinates(3, canvasSetting.height-5, 30, canvasSetting.height-5);	
+					textbackground(0);
+					drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
+					textcolor(0);
+					for(int i=ancient_top; i < pane.qtty_lines && pane.lines[i].real_y<=ancient_top + canvasSetting.height-9; i++){
+						for(int j=0; j < pane.lines[i].qtty_items; j++){
+							gotoxy(pane.lines[i].items[j].x, 
+								(pane.lines[i].y + pane.lines[i].real_y-pane.lines[i].y)-ancient_top+4
+							);
+							printf("%s", pane.lines[i].items[j].text);
+						}
+					}
+					textcolor(7);
+				}
+					
+		}
+		
+	}while(tecla != 27);
+}
 
 /*
 *	@param text char[]
@@ -362,14 +522,14 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 	textbackground(0);
 	textcolor(7);
 	if(showPrevious != 0){
-		if(stricmp(aux, "\0") == 0){
+		if(aux[0] != '\0'){
 			gotoxy(x, yi); printf("%d", showPrevious);
 		}
 		clear_untill = x+maxLength+10 < canvasSetting.width-1 ? x+maxLength+10 : canvasSetting.width-1;
 		clearCoordinates(x, yi+1, clear_untill, yf+1);
 	}	
 	clearCoordinates(x, y, x+maxLength, y);
-	int retorno = showPrevious ? stricmp(aux, "\0") == 0 ? showPrevious : atoi(aux) : atoi(aux);
+	int retorno = showPrevious ? aux[0] != '\0' == 0 ? showPrevious : atoi(aux) : atoi(aux);
 	gotoxy(x, yi); printf("%d",retorno);
 	return retorno;
 }
@@ -426,14 +586,14 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 	textcolor(7);
 	aux[pos] = '\0';
 	if(showPrevious != 0){
-		if(stricmp(aux, "\0") == 0){
+		if(aux[0] != '\0'){
 			gotoxy(x, yi); printf("%.1f", showPrevious);
 		}
 		clear_untill = x+maxLength+10 < canvasSetting.width-1 ? x+maxLength+10 : canvasSetting.width-1;
 		clearCoordinates(x, yi+1, clear_untill, yf+1);
 	}
 	clearCoordinates(x, yi, clear_untill, yf);
-	float retorno = showPrevious ? stricmp(aux, "\0") == 0 ? showPrevious : atof(aux) : atof(aux);
+	float retorno = showPrevious ? aux[0] != '\0' ? showPrevious : atof(aux) : atof(aux);
 	gotoxy(x, yi); printf("%.1f", retorno);
 	
 	return retorno;
@@ -728,7 +888,7 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int sho
 	if(showPrevious != 0){
 		clear_untill = xf+10 < canvasSetting.width-1 ? xf+10 : canvasSetting.width-1;
 		clearCoordinates(xi, yi+1, clear_untill, yf+1);
-		if(stricmp(variable, "\0") == 0){
+		if(variable[0] != '\0'){
 			gotoxy(xi, yi); printf("%s", ancient);
 			strcpy(variable, ancient);
 		}
