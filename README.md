@@ -15,6 +15,38 @@
 
 ## Functions:
 
+### Summary:
+1. Canvas
+	* [setCanvas](#setcanvaschar-int-int-int-int--void)
+	* [drawCanvas](#drawcanvas--void)
+	* [clearCanvas](#clearcanvas--void)
+1. Menu
+	* [setMenu](#setmenuint-int-char--menu)
+	* [addMenuOption](#addmenuoptionmenu-const-char--int--void)
+	* [clearMenuOptions](#clearmenuoptionsmenu--void)
+	* [showMenu](#showmenumenu--int)
+1. Breadcrumb
+	* [setBreadcrumb](#setbreadcrumbconst-char--breadcrumb--breadcrumb)
+	* [showBreadcrumbs](#showbreadcrumbsbreadcrumb--void)
+1. ScrollPane
+	* [setScrollPane](#setscrollpane--scrollpane)
+	* [addScrollPaneItem](#addscrollpaneitemscrollpane-int-int-const-char---int)
+1. Toast
+	* [showToast](#showtoastconst-char--int--void)
+	* [removeToast](#removetoast--void)
+1. Input
+	* [readInt](#readintint-int-int-int--int)
+	* [readFloat](#readfloatint-int-int-float--float)
+	* [readString](#readstringchar--int-int-int-int--void)
+	* [readChar](#readcharint-int-char--char)
+	* [readMaskedString](#readmaskedstringchar--const-char-int-int-int--void)
+	* [readPassword](#readpasswordchar--char-int-int-int--void)
+1. UI utils
+	* [clearCoordinates](#clearcoordinatesint-int-int-int--void)
+	* [drawLine](#drawlineint-int-int-int-char--void)
+	* [centralize](#centralizeconst-char---int)
+	* [printCenter](#printcenterconst-char--int--void)
+
 ### setCanvas(char, int, int, int, int) : void
 
 Must be called before `drawCanvas()`, explaned below, in order to configure it.
@@ -270,7 +302,7 @@ const char text[]
 
 Returns:
 ```
-1 if it executed succesfully else 0
+1 if it executed successfully else 0
 ```
 
 ### showScrollPane(scrollPane) :
