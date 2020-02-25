@@ -1,6 +1,6 @@
-/*
+/**
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.2.0
+* version 2.2.3
 * Certify you have conio2.h installed in your PC before using this library
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, share, pull and enjoy it!
@@ -76,6 +76,51 @@ struct scrollPane{
 };
 //FIM STRUCT SCROLLPANE
 
+//==========================FUNCTIONS==========================
+
+// -------------- scrollpane
+scrollPane 	setScrollPane			();
+int 		addScrollPaneItem		(scrollPane &pane, int x, int y, const char text[]);
+void 		showScrollPane			(scrollPane pane);
+
+// -------------- breadcrumb
+breadcrumb 	setBreadcrumb			(const char text[], breadcrumb *prev=NULL);
+void 		showBreadcrumbs			(breadcrumb bread);
+
+// -------------- canvas
+void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0);
+void 		drawCanvas				();
+void 		clearCanvas				();
+void 		showTitle				(const char title[], int color=7);
+
+// -------------- menu
+menu 		setMenu					(int yStart, int x=0, char cursor='>');
+void 		addMenuOption			(menu &_menu, const char option[], int enabled=1);
+void 		clearMenuOptions		(menu &_menu);
+int			showMenu				(menu menuSettings, int option=0);
+
+// -------------- toast
+void 		showToast				(const char text[], int type=7);
+void		removeToast				();
+
+// -------------- input
+int 		readInt					(int x, int y, int maxLength, int showPrevious=0);
+float 		readFloat				(int x, int y, int maxLength, float showPrevious=0);
+void 		readString				(char variable[], int x, int y, int maxLength, int showPrevious=0);
+char 		readChar				(int x, int y, char showPrevious=0);
+void 		readMaskedString		(char variable[], const char mask[], int xi, int y, int showPreviousd=0);
+void 		readPassword			(char variable[], char mask, int x, int y, int maxLength);
+
+
+// -------------- UI utils
+void 		clearCoordinates		(int xi, int yi, int xf=0, int yf=0);
+void 		drawLine				(int start, int finish, int coordinate, int horizontal=0, char border='*');
+int 		centralize				(const char texto[]);
+void 		printCenter				(const char text[], int y);
+
+//========================END FUNCTIONS========================
+
+
 scrollPane setScrollPane(){
 	scrollPane scroll;
 	scroll.top = 4;
@@ -109,7 +154,7 @@ int addPaneLine(scrollPane &pane, int y){
 	
 	return y;
 }
-int addPaneLineItem(scrollPane &pane, int x, int y, const char text[]){
+int addScrollPaneItem(scrollPane &pane, int x, int y, const char text[]){
 	addPaneLine(pane, y);
 	pane.lines[y].items[pane.lines[y].qtty_items] = setPanelLineItem(x, text);
 	pane.lines[y].qtty_items++;
@@ -137,12 +182,13 @@ void showScrollPane(scrollPane pane){
 			
 			gotoxy(3, canvasSetting.height-5);
 			printf("(%d%% - %d%%)", 
-				percInit*100/(pane.qtty_lines-1), percFin*100/(pane.qtty_lines-1) > 100 ? 100 : percFin*100/(pane.qtty_lines-1)
+				(pane.top-4)*100/(pane.qtty_lines-1), 
+				pane.top-4+canvasSetting.height-8 > pane.qtty_lines-1 ? 100 : (pane.top+canvasSetting.height-8)*100/(pane.qtty_lines-1)
 			);
 			
-			textbackground(8);
-			drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
-			textbackground(0);
+//			textbackground(8);
+//			drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
+//			textbackground(0);
 			for(int i=pane.top; i < pane.qtty_lines && pane.lines[i].real_y<=pane.top + canvasSetting.height-9; i++){
 				for(int j=0; j < pane.lines[i].qtty_items; j++){
 					gotoxy(pane.lines[i].items[j].x, 
@@ -165,21 +211,16 @@ void showScrollPane(scrollPane pane){
 						pane.top--;
 						if(pane.top < 4)
 							pane.top = 4;
-						else{
+						else
 							move = 1;	
-							percInit --;
-							percFin --;
-						}
 						break;
 					case 80:		//DOWN
 						pane.top++;
-						if(pane.top+canvasSetting.height-9 >= pane.qtty_lines)
+						if(pane.top+canvasSetting.height-8 >= pane.qtty_lines)
 							pane.top--;
-						else{
-							move = 1;	
-							percInit ++;
-							percFin ++;
-						}
+						else
+							move = 1;
+						
 						break;
 					case 73:		//PG_UP
 						pane.top -= canvasSetting.height;
@@ -189,15 +230,15 @@ void showScrollPane(scrollPane pane){
 						break;
 					case 81:		//PG_DOWN
 						pane.top+= canvasSetting.height;
-						if(pane.top+canvasSetting.height-9 >= pane.qtty_lines)
-							pane.top-= canvasSetting.height;
+						if(pane.top+canvasSetting.height-8 >= pane.qtty_lines)
+							pane.top= pane.qtty_lines-1 - canvasSetting.height;
 						move = 1;
 						break;
 				}
 				if(move){				
 					clearCoordinates(3, canvasSetting.height-5, 30, canvasSetting.height-5);	
-					textbackground(0);
-					drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
+//					textbackground(0);
+//					drawLine(barPos, barPos+barSize-1, canvasSetting.width-1, 1, ' ');
 					textcolor(0);
 					for(int i=ancient_top; i < pane.qtty_lines && pane.lines[i].real_y<=ancient_top + canvasSetting.height-9; i++){
 						for(int j=0; j < pane.lines[i].qtty_items; j++){
@@ -221,7 +262,7 @@ void showScrollPane(scrollPane pane){
 *	
 *	@returnType breadcrumb
 */
-breadcrumb setBreadcrumb(const char text[], breadcrumb *prev=NULL){
+breadcrumb setBreadcrumb(const char text[], breadcrumb *prev){
 	breadcrumb bread;
 	strcpy(bread.text, text);
 	bread.previous = prev;
@@ -281,7 +322,7 @@ int getScreenHeight(){
 *	
 *	@returnType void
 */
-void setCanvas(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0){
+void setCanvas(char border, int notification_area, int title_area, int forecolor, int backcolor){
 	void hideCursor();
 	canvasSetting.border = border;
 	canvasSetting.backcolor = backcolor;
@@ -301,7 +342,7 @@ void setCanvas(char border='#', int notification_area=0, int title_area=0, int f
 *	
 *	@returnType menu
 */
-menu setMenu(int yStart, int x=0, char cursor='>'){ //IT INITIALIZES THE MENU OBJECT
+menu setMenu(int yStart, int x, char cursor){ //IT INITIALIZES THE MENU OBJECT
 	int centralize (const char[]);
 	menu _menu;
 	_menu.min = yStart;
@@ -321,7 +362,7 @@ menu setMenu(int yStart, int x=0, char cursor='>'){ //IT INITIALIZES THE MENU OB
 *	
 *	@returnType menu => CREATED MENU
 */
-void addMenuOption(menu &_menu, const char option[], int enabled=1){ //IT ADDS A NEW MENU OPTION
+void addMenuOption(menu &_menu, const char option[], int enabled){ //IT ADDS A NEW MENU OPTION
 	void showToast(const char[]), removeToast();
 	strcpy(_menu.options[_menu.menu_size].option, option);
 	_menu.options[_menu.menu_size].enabled = enabled;
@@ -347,7 +388,7 @@ void clearMenuOptions(menu &_menu){
 *	
 *	@returnType void
 */
-void clearCoordinates(int xi, int yi, int xf=0, int yf=0){ 	//IT CLEANS INSIDE THE DETERMINED AREA
+void clearCoordinates(int xi, int yi, int xf, int yf){ 	//IT CLEANS INSIDE THE DETERMINED AREA
 	xi = xi<1? 1 : xi;
 	yi = yi<1? 1 : yi;
 	
@@ -381,7 +422,7 @@ void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 *	
 *	@returnType void
 */
-void drawLine(int start, int finish, int coordinate, int horizontal=0, char border='*'){
+void drawLine(int start, int finish, int coordinate, int horizontal, char border){
 	int i;
 	for (i=start; i<=finish; i++){
 		if(!horizontal)
@@ -451,7 +492,7 @@ void printCenter(const char text[], int y){
 	gotoxy(centralize(text), y);puts(text);
 }
 
-void showTitle(const char title[], int color=7){
+void showTitle(const char title[], int color){
 	textcolor(color);
 	printCenter(title, 2);
 	textcolor(7);
@@ -462,7 +503,7 @@ void showTitle(const char title[], int color=7){
 *	
 *	@returnType void
 */
-void showToast(const char text[], int type=7){ //SHOW NOTIFICATION TEXT
+void showToast(const char text[], int type){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	textcolor(type);
 	textbackground(0);
@@ -479,7 +520,7 @@ void showToast(const char text[], int type=7){ //SHOW NOTIFICATION TEXT
 *	
 *	@returnType int => INT READ VARIABLE
 */
-int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INPUT
+int readInt(int x, int y, int maxLength, int showPrevious){ //IT SHOWS INT INPUT
 	int yi, yf=yi=y;
 	int sizeInt = maxLength;
 	char aux[sizeInt];
@@ -543,7 +584,7 @@ int readInt(int x, int y, int maxLength, int showPrevious=0){ //IT SHOWS INT INP
 *	
 *	@returnType float => FLOAT READ VARIABLE
 */
-float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS FLOAT INPUT
+float readFloat(int x, int y, int maxLength, float showPrevious){ //IT SHOWS FLOAT INPUT
 	int yi, yf=yi=y;
 	int sizeFloat = maxLength;
 	char aux[sizeFloat];
@@ -609,7 +650,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious=0){ //IT SHOWS F
 *
 *	@returnType void
 */
-void readString(char variable[], int x, int y, int maxLength, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readString(char variable[], int x, int y, int maxLength, int showPrevious){ //IT SHOWS STRING INPUT
 	char ancient[maxLength];
 	char tecla='\0';
 	
@@ -722,7 +763,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious =
 *	@param y int
 *	@param showPrevious default 0
 */
-char readChar(int x, int y, char showPrevious = 0){ //IT SHOWS CHAR INPUT
+char readChar(int x, int y, char showPrevious){ //IT SHOWS CHAR INPUT
 	if(showPrevious){
 		gotoxy(x+1, y+1);printf("(%c)", showPrevious);
 	}
@@ -786,7 +827,7 @@ int maskChar(char caracter){
 *
 *	@returnType void
 */
-void readMaskedString(char variable[], const char mask[], int xi, int y, int showPrevious = 0){ //IT SHOWS STRING INPUT
+void readMaskedString(char variable[], const char mask[], int xi, int y, int showPrevious){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
 	char ancient[40];
@@ -960,7 +1001,7 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 *	
 *	@returnType int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED)
 */
-int showMenu(menu menuSettings, int option=0){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
+int showMenu(menu menuSettings, int option){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
 	int coord;
 	int y;
 	for(y=option; y<menuSettings.menu_size && !menuSettings.options[y].enabled; y++);
