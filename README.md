@@ -258,7 +258,7 @@ scrollPane pane
 
 ### addScrollPaneItem(scrollPane, int, int, const char []) : int
 
-As the name suuggests, this function add some text in a scrollPane previously setted
+As the name suggests, this function adds some text in a scrollPane previously setted sent as parameter
 
 Receives:
 ```
