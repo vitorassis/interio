@@ -282,12 +282,12 @@ struct scrollPane{
 			/**	FUNCTION drawLine
 			*		@param start 				int
 			*		@param finish 				int
-			*		@param horizontal 			int 			default 0
+			*		@param vertical 			int 			default 0
 			*		@param border 				int 			default '#'
 			*
 			*		@returnType 				void
 			*/
-		void 		drawLine				(int start, int finish, int coordinate, int horizontal=0, char border='*');
+		void 		drawLine				(int start, int finish, int coordinate, int vertical=0, char border='*');
 		
 			/**	FUNCTION centralize
 			*		@param texto				char []
@@ -557,10 +557,10 @@ void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 
 
 
-void drawLine(int start, int finish, int coordinate, int horizontal, char border){
+void drawLine(int start, int finish, int coordinate, int vertical, char border){
 	int i;
 	for (i=start; i<=finish; i++){
-		if(!horizontal)
+		if(!vertical)
 			gotoxy(i, coordinate);
 		else
 			gotoxy(coordinate, i);

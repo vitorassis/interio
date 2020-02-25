@@ -9,7 +9,7 @@
 ## Steps: 
 
 1. Download this or clone.
-1. Put interio.h with your source
+1. Put interio.h inside your source directory
 1. Then: `#include "interio.h"`
 1. You are ready to code it!
 
@@ -82,7 +82,7 @@ void
 
 ### clearMenuOptions(menu) : void
 
-remove all options from the sent menu.
+Use this to remove all options from the sent menu.
 
 Receives:
 ```
@@ -108,7 +108,7 @@ int
 
 ### clearCoordinates(int, int, int, int) : void
 
-Clear the screen inside the sent rectangle.
+It clears the screen inside the sent rectangle.
 If xf (x final) or yf (y final) is equal 0 it will worth the same as the respective initial, then `clearCoordinates(4, 5)` clears only the position (4,5).
 
 Receives:
@@ -125,14 +125,14 @@ void
 
 ### drawLine(int, int, int, int, char) : void
 
-It draws a line, if horizontal param is 1, it will be vertical.
+It draws a line, if vertical param is 1, it will be vertical.
 
 Receives:
 ```
 int start
 int finish
 int coordinate
-int horizontal default 0
+int vertical default 0
 char border default '*'
 ```
 Returns:
