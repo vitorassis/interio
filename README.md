@@ -276,6 +276,7 @@ Returns:
 ### showScrollPane(scrollPane) :
 
 It shows the scrollPane and it runs into a loop until the user hit ESC key
+The user can change the displayed lines with hitting UP, DOWN, PAGE UP or PAGE DOWN keys.
 
 Receives:
 ```
