@@ -78,45 +78,231 @@ struct scrollPane{
 
 //==========================FUNCTIONS==========================
 
-// -------------- scrollpane
-scrollPane 	setScrollPane			();
-int 		addScrollPaneItem		(scrollPane &pane, int x, int y, const char text[]);
-void 		showScrollPane			(scrollPane pane);
-
-// -------------- breadcrumb
-breadcrumb 	setBreadcrumb			(const char text[], breadcrumb *prev=NULL);
-void 		showBreadcrumbs			(breadcrumb bread);
-
-// -------------- canvas
-void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0);
-void 		drawCanvas				();
-void 		clearCanvas				();
-void 		showTitle				(const char title[], int color=7);
-
-// -------------- menu
-menu 		setMenu					(int yStart, int x=0, char cursor='>');
-void 		addMenuOption			(menu &_menu, const char option[], int enabled=1);
-void 		clearMenuOptions		(menu &_menu);
-int			showMenu				(menu menuSettings, int option=0);
-
-// -------------- toast
-void 		showToast				(const char text[], int type=7);
-void		removeToast				();
-
-// -------------- input
-int 		readInt					(int x, int y, int maxLength, int showPrevious=0);
-float 		readFloat				(int x, int y, int maxLength, float showPrevious=0);
-void 		readString				(char variable[], int x, int y, int maxLength, int showPrevious=0);
-char 		readChar				(int x, int y, char showPrevious=0);
-void 		readMaskedString		(char variable[], const char mask[], int xi, int y, int showPreviousd=0);
-void 		readPassword			(char variable[], char mask, int x, int y, int maxLength);
-
-
-// -------------- UI utils
-void 		clearCoordinates		(int xi, int yi, int xf=0, int yf=0);
-void 		drawLine				(int start, int finish, int coordinate, int horizontal=0, char border='*');
-int 		centralize				(const char texto[]);
-void 		printCenter				(const char text[], int y);
+	// -------------- breadcrumb
+	
+			/**	FUNCTION setBreadCrumb
+			*		@param text char[]
+			*		@param prev breadcrumb* default NULL
+			*	
+			*		@returnType breadcrumb
+			*/
+		breadcrumb 	setBreadcrumb			(const char text[], breadcrumb *prev=NULL);
+		
+		
+			/**	FUNCTION showBreadCrumbs
+			*		@param bread breadcrumb
+			*		@param y int
+			*	
+			*		@returnType int
+			*/
+		void 		showBreadcrumbs			(breadcrumb bread);
+	
+	// -------------- canvas --------------
+	
+			/**	FUNCTION setCanvas
+			*		@param border 				char			default '#'
+			*		@param notification_area 	int 			default 0 (this shows or not the notification area)
+			*		@param title_area 			int 			default 0 (this shows or not the title area)
+			*		@param forecolor 			int 			default 7
+			*		@param backcolor 			int 			default 0
+			*		
+			*		@returnType 				void
+			*/
+		void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0);
+	
+			/**	FUNCTION drawCanvas
+			*		@returnType 				void
+			*/
+		void 		drawCanvas				();
+	
+			/**	FUNCTION clearCanvas
+			*		@returnType 				void
+			*/
+		void 		clearCanvas				();
+	
+			/**	FUNCTION showTitle
+			*		@param texto 				const char []
+			*		@param color 				int 			default 7
+			*	
+			*		@returnType void
+			*/
+		void 		showTitle				(const char title[], int color=7);
+	
+	// -------------- menu --------------
+	
+			/**	FUNCTION setMenu
+			*		@param yStart 				int
+			*		@param x 					int 			default 30
+			*		@param cursor 				char 			default '>'
+			*	
+			*		@returnType 				menu
+			*/
+		menu 		setMenu					(int yStart, int x=0, char cursor='>');
+	
+			/**	FUNCTION addMenuOption
+			*		@param 	_menu 				menu
+			*		@param	option 				char []
+			*		@param enabled 				int 			default 1
+			*	
+			*		@returnType menu => CREATED MENU
+			*/
+		void 		addMenuOption			(menu &_menu, const char option[], int enabled=1);
+	
+			/**	FUNCTION clearMenuOptions
+			*		@param _menu 				menu
+			*	
+			*		@returnType 				void
+			*/
+		void 		clearMenuOptions		(menu &_menu);
+	
+			/**	FUNCTION showMenu
+			*		@param menuSettings 		menu
+			*		@param option				int 			default 0 (DEFINES THE START CURSOR POSITION)
+			*		
+			*		@returnType 				int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED THEM)
+			*/
+		int			showMenu				(menu menuSettings, int option=0);
+	
+	// -------------- toast --------------
+	
+			/**	FUNCTION showToast
+			*		@param text					const char []
+			*		@param type					int				default 7
+			*
+			*		@returnType 				void
+			*/
+		void 		showToast				(const char text[], int type=7);
+	
+			/**	FUNCTION removeToast
+			*		@returnType 				void
+			*/
+		void		removeToast				();
+	
+	// -------------- input --------------
+	
+			/**	FUNCTION readInt
+			*		@param x 					int
+			*		@param y 					int
+			*		@param maxLength 			int
+			*		@param showPrevious 		int 			default 0
+			*	
+			*		@returnType 				int => INT READ VARIABLE
+			*/
+		int 		readInt					(int x, int y, int maxLength, int showPrevious=0);
+		
+			/**	FUNCTION readFloat
+			*		@param x 					int
+			*		@param y 					int
+			*		@param maxLength 			int
+			*		@param showPrevious 		int 			default 0
+			*	
+			*		@returnType 				float => FLOAT READ VARIABLE
+			*/
+		float 		readFloat				(int x, int y, int maxLength, float showPrevious=0);
+		
+			/**	FUNCTION readString
+			*		@param variable				char []
+			*		@param x 					int
+			*		@param y 					int
+			*		@param maxLength 			int
+			*		@param showPrevious 		int 			default 0
+			*
+			*		@returnType 				void
+			*/
+		void 		readString				(char variable[], int x, int y, int maxLength, int showPrevious=0);
+		
+			/**	FUNCTION readChar
+			*		@param x 					int 
+			*		@param y 					int
+			*		@param showPrevious 		int				default 0
+			*/
+		char 		readChar				(int x, int y, char showPrevious=0);
+		
+			/**	FUNCTION readMaskedString
+			*		@param variable				char []
+			*		@param mask 				char []
+			*		@param x 					int
+			*		@param y 					int
+			*		@param maxLength 			int
+			*		@param showPrevious 		int 			default 0
+			*
+			*		@returnType void
+			*/
+		void 		readMaskedString		(char variable[], const char mask[], int xi, int y, int showPreviousd=0);
+		
+			/**	FUNCTION readPassword
+			*		@param variable				char []
+			*		@param mask 				char
+			*		@param x 					int
+			*		@param y 					int
+			*		@param maxLength 			int
+			*		@param showPrevious 		int 			default 0
+			*
+			*		@returnType 				void
+			*/
+		void 		readPassword			(char variable[], char mask, int x, int y, int maxLength);
+		
+	
+	// -------------- scrollpane
+	
+			/**	FUNCTION setScrollPane
+			*		@returnType 				scrollPane	
+			*/
+		scrollPane 	setScrollPane			();
+		
+			/**	FUNCTION addScrollPaneItem
+			*		@param pane					scrollPane
+			*		@param x					int
+			*		@param y					int
+			*		@param text					const char []
+			*
+			*		@returnType					int
+			*/
+		int 		addScrollPaneItem		(scrollPane &pane, int x, int y, const char text[]);
+		
+			/**	FUNCTION showScrollPane
+			*		@param pane					scrollPane
+			*
+			*		returnType					void
+			*/
+		void 		showScrollPane			(scrollPane pane);
+	
+	// -------------- UI utils --------------
+	
+			/** FUNCTION clearCoordinates
+			*		@param xi 					int
+			*		@param yi 					int
+			*		@param xf 					int 			default 0
+			*		@param yf 					int 			default 0
+			*	
+			*		@returnType 				void
+			*/
+		void 		clearCoordinates		(int xi, int yi, int xf=0, int yf=0);
+		
+			/**	FUNCTION drawLine
+			*		@param start 				int
+			*		@param finish 				int
+			*		@param horizontal 			int 			default 0
+			*		@param border 				int 			default '#'
+			*
+			*		@returnType 				void
+			*/
+		void 		drawLine				(int start, int finish, int coordinate, int horizontal=0, char border='*');
+		
+			/**	FUNCTION centralize
+			*		@param texto				char []
+			*
+			*		@returnType 				int => CENTER X
+			*/
+		int 		centralize				(const char texto[]);
+		
+			/**	FUNCTION printCenter
+			*		@param texto	 			char []
+			*		@param y 					int
+			*	
+			*		@returnType 				void
+			*/
+		void 		printCenter				(const char text[], int y);
 
 //========================END FUNCTIONS========================
 
@@ -174,7 +360,7 @@ void showScrollPane(scrollPane pane){
 	
 	int barSize = ((float)pane.lines[pane.qtty_lines-1].y-8	)/((pane.qtty_lines-8))*(pane.lines[pane.qtty_lines-1].y-8) -1;
 	int percInit=0, percFin=canvasSetting.height-8;
-	showToast("[ESC] para sair", TOAST_WARNING);
+	showToast("Use: [UP] | [DOWN] | [PAGE UP] | [PAGE DOWN] | [ESC]", TOAST_WARNING);
 	do{
 		
 		if(move){
@@ -230,8 +416,8 @@ void showScrollPane(scrollPane pane){
 						break;
 					case 81:		//PG_DOWN
 						pane.top+= canvasSetting.height;
-						if(pane.top+canvasSetting.height-8 >= pane.qtty_lines)
-							pane.top= pane.qtty_lines-1 - canvasSetting.height;
+						if(pane.top-4+canvasSetting.height-8 > pane.qtty_lines-1)
+							pane.top= pane.qtty_lines-1 - canvasSetting.height+8;
 						move = 1;
 						break;
 				}
@@ -256,12 +442,6 @@ void showScrollPane(scrollPane pane){
 	}while(tecla != 27);
 }
 
-/*
-*	@param text char[]
-*	@param prev breadcrumb* default NULL
-*	
-*	@returnType breadcrumb
-*/
 breadcrumb setBreadcrumb(const char text[], breadcrumb *prev){
 	breadcrumb bread;
 	strcpy(bread.text, text);
@@ -289,12 +469,6 @@ int showBreadcrumb(breadcrumb bread, int &y){
 	return x;
 }
 
-/*
-*	@param bread breadcrumb
-*	@param y int
-*	
-*	@returnType int
-*/
 void showBreadcrumbs(breadcrumb bread){
 	int y = 4;
 	int x = 4;
@@ -313,15 +487,7 @@ int getScreenHeight(){
     return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
 
-/*
-*	@param border char default '#'
-*	@param notification_area int default 0 (this showss or not the notification area)
-*	@param title_area int default 0 (this showss or not the title area)
-*	@param forecolor int default 7
-*	@param backcolor int default 0
-*	
-*	@returnType void
-*/
+
 void setCanvas(char border, int notification_area, int title_area, int forecolor, int backcolor){
 	void hideCursor();
 	canvasSetting.border = border;
@@ -335,13 +501,7 @@ void setCanvas(char border, int notification_area, int title_area, int forecolor
 }
 
 
-/*
-*	@param yStart int
-*	@param x int default 30
-*	@param cursor char default '>'
-*	
-*	@returnType menu
-*/
+
 menu setMenu(int yStart, int x, char cursor){ //IT INITIALIZES THE MENU OBJECT
 	int centralize (const char[]);
 	menu _menu;
@@ -355,13 +515,7 @@ menu setMenu(int yStart, int x, char cursor){ //IT INITIALIZES THE MENU OBJECT
 }
 
 
-/*
-*	@param _menu menu
-*	@param option[] char
-*	@param enabled int default 1
-*	
-*	@returnType menu => CREATED MENU
-*/
+
 void addMenuOption(menu &_menu, const char option[], int enabled){ //IT ADDS A NEW MENU OPTION
 	void showToast(const char[]), removeToast();
 	strcpy(_menu.options[_menu.menu_size].option, option);
@@ -370,24 +524,12 @@ void addMenuOption(menu &_menu, const char option[], int enabled){ //IT ADDS A N
 }
 
 
-/*
-*	@param _menu menu
-*	
-*	@returnType void
-*/
 void clearMenuOptions(menu &_menu){
 	_menu.menu_size = 0;
 }
 
 
-/*
-*	@param xi int
-*	@param yi int
-*	@param xf int default 0
-*	@param yf int default 0
-*	
-*	@returnType void
-*/
+
 void clearCoordinates(int xi, int yi, int xf, int yf){ 	//IT CLEANS INSIDE THE DETERMINED AREA
 	xi = xi<1? 1 : xi;
 	yi = yi<1? 1 : yi;
@@ -414,14 +556,7 @@ void clearCanvas(){    //IT CLEANS INSIDE THE FRAME AREA
 }
 
 
-/*
-*	@param start int
-*	@param finish int
-*	@param horizontal int default 0
-*	@param border int default '#'
-*	
-*	@returnType void
-*/
+
 void drawLine(int start, int finish, int coordinate, int horizontal, char border){
 	int i;
 	for (i=start; i<=finish; i++){
@@ -443,9 +578,7 @@ void hideCursor(){
 }
 
 
-/*	
-*	@returnType void
-*/
+
 void drawCanvas(){ 	//IT DRAWS CANVAS FRAME BORDERING THE WINDOW
 	hideCursor();
 	textcolor(canvasSetting.forecolor);
@@ -473,21 +606,12 @@ void removeToast(){ //REMOVE NOTIFICATION TEXT
 }
 
 
-/*
-*	@param texto[] char
-*	
-*	@returnType int => CENTER X
-*/
+
 int centralize(const char texto[]){ //CENTRALIZE TEXT
 	return (((canvasSetting.width-2)-strlen(texto))/2) +1;
 }
 
-/*
-*	@param texto[] char
-*	@param y int
-*	
-*	@returnType void
-*/
+
 void printCenter(const char text[], int y){
 	gotoxy(centralize(text), y);puts(text);
 }
@@ -498,11 +622,7 @@ void showTitle(const char title[], int color){
 	textcolor(7);
 }
 
-/*
-*	@param text[] char
-*	
-*	@returnType void
-*/
+
 void showToast(const char text[], int type){ //SHOW NOTIFICATION TEXT
 	removeToast();
 	textcolor(type);
@@ -512,14 +632,7 @@ void showToast(const char text[], int type){ //SHOW NOTIFICATION TEXT
 }
 
 
-/*
-*	@param x int
-*	@param y int
-*	@param maxLength int
-*	@param showPrevious int default 0
-*	
-*	@returnType int => INT READ VARIABLE
-*/
+
 int readInt(int x, int y, int maxLength, int showPrevious){ //IT SHOWS INT INPUT
 	int yi, yf=yi=y;
 	int sizeInt = maxLength;
@@ -576,14 +689,7 @@ int readInt(int x, int y, int maxLength, int showPrevious){ //IT SHOWS INT INPUT
 }
 
 
-/*
-*	@param x int
-*	@param y int
-*	@param maxLength int
-*	@param showPrevious int default 0
-*	
-*	@returnType float => FLOAT READ VARIABLE
-*/
+
 float readFloat(int x, int y, int maxLength, float showPrevious){ //IT SHOWS FLOAT INPUT
 	int yi, yf=yi=y;
 	int sizeFloat = maxLength;
@@ -641,15 +747,7 @@ float readFloat(int x, int y, int maxLength, float showPrevious){ //IT SHOWS FLO
 }
 
 
-/*
-*	@param variable[] char
-*	@param x int
-*	@param y int
-*	@param maxLength int
-*	@param showPrevious int default 0
-*
-*	@returnType void
-*/
+
 void readString(char variable[], int x, int y, int maxLength, int showPrevious){ //IT SHOWS STRING INPUT
 	char ancient[maxLength];
 	char tecla='\0';
@@ -758,11 +856,7 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious){
 }
 
 
-/*
-*	@param x int 
-*	@param y int
-*	@param showPrevious default 0
-*/
+
 char readChar(int x, int y, char showPrevious){ //IT SHOWS CHAR INPUT
 	if(showPrevious){
 		gotoxy(x+1, y+1);printf("(%c)", showPrevious);
@@ -817,16 +911,7 @@ int maskChar(char caracter){
 	return caracter == 'd' || caracter == 'a' || caracter == 'A' || caracter == 'x';
 }
 
-/*
-*	@param variable[] char
-*	@param mask[] char
-*	@param x int
-*	@param y int
-*	@param maxLength int
-*	@param showPrevious int default 0
-*
-*	@returnType void
-*/
+
 void readMaskedString(char variable[], const char mask[], int xi, int y, int showPrevious){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
@@ -939,16 +1024,7 @@ void readMaskedString(char variable[], const char mask[], int xi, int y, int sho
 	gotoxy(xi, yi); puts(variable);
 }
 
-/*
-*	@param variable[] char
-*	@param mask char
-*	@param x int
-*	@param y int
-*	@param maxLength int
-*	@param showPrevious int default 0
-*
-*	@returnType void
-*/
+
 void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT SHOWS STRING INPUT
 	int yi, yf=yi=y;
 	int clear_untill;
@@ -996,11 +1072,7 @@ void readPassword(char variable[], char mask, int x, int y, int maxLength){ //IT
 }
 
 
-/*
-*	@param menuSettings menu
-*	
-*	@returnType int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED)
-*/
+
 int showMenu(menu menuSettings, int option){ //IT SHOWS CUSTOMIZED VERTICAL MENU AND RETURNS THE INDEX
 	int coord;
 	int y;
