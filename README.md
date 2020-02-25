@@ -251,10 +251,6 @@ void
 
 It creates a scrollPane variable
 
-Receives:
-```
-void
-```
 Returns:
 ```
 scrollPane pane
