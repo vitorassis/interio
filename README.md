@@ -13,11 +13,19 @@
 1. Then: `#include "interio.h"`
 1. You are ready to code it!
 
+## Types:
+
+### Summary:
+	* canvas
+	* menu
+	* breadcrumb
+	* scrollpane
+
 ## Functions:
 
 ### Summary:
 1. Canvas
-	* [setCanvas](#setcanvaschar-int-int-int-int--void)
+	* [setCanvas](#setcanvaschar-int-int-int-int-int-int--void)
 	* [drawCanvas](#drawcanvas--void)
 	* [clearCanvas](#clearcanvas--void)
 1. Menu
