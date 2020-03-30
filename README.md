@@ -16,10 +16,10 @@
 ## Types:
 
 ### Summary:
-	* canvas
-	* menu
-	* breadcrumb
-	* scrollpane
+	1. canvas
+	1. menu
+	1. breadcrumb
+	1. scrollpane
 
 ## Functions:
 
