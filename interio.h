@@ -71,7 +71,7 @@ struct scrollPane{
 	int top;
 	int bottom;
 	
-	paneLine lines[300];
+	paneLine lines[500];
 	int qtty_lines;
 };
 //FIM STRUCT SCROLLPANE
@@ -108,7 +108,7 @@ struct scrollPane{
 			*		
 			*		@returnType 				void
 			*/
-		void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0);
+		void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0, int width=0, int height=0);
 	
 			/**	FUNCTION drawCanvas
 			*		@returnType 				void
@@ -362,7 +362,6 @@ void showScrollPane(scrollPane pane){
 	int percInit=0, percFin=canvasSetting.height-8;
 	showToast("Use: [UP] | [DOWN] | [PAGE UP] | [PAGE DOWN] | [ESC]", TOAST_WARNING);
 	do{
-		
 		if(move){
 			barPos = 4+ (pane.lines[pane.qtty_lines-1].y-8)* ((float)(barSize)*(pane.top-4))/100;
 			
@@ -440,6 +439,8 @@ void showScrollPane(scrollPane pane){
 		}
 		
 	}while(tecla != 27);
+	
+	removeToast();
 }
 
 breadcrumb setBreadcrumb(const char text[], breadcrumb *prev){
@@ -487,14 +488,40 @@ int getScreenHeight(){
     return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
 
+void setWindow(int Width, int Height) 
+{ 
+    _COORD coord; 
+    coord.X = Width; 
+    coord.Y = Height; 
 
-void setCanvas(char border, int notification_area, int title_area, int forecolor, int backcolor){
+    _SMALL_RECT Rect; 
+    Rect.Top = 0; 
+    Rect.Left = 0; 
+    Rect.Bottom = Height - 1; 
+    Rect.Right = Width - 1; 
+
+    HANDLE Handle = GetStdHandle(STD_OUTPUT_HANDLE);      // Get Handle 
+    SetConsoleScreenBufferSize(Handle, coord);            // Set Buffer Size 
+    SetConsoleWindowInfo(Handle, TRUE, &Rect);            // Set Window Size 
+} 
+
+
+
+void setCanvas(char border, int notification_area, int title_area, int forecolor, int backcolor, int width, int height){
 	void hideCursor();
 	canvasSetting.border = border;
 	canvasSetting.backcolor = backcolor;
 	canvasSetting.forecolor = forecolor;
 	canvasSetting.notification_area = notification_area;
 	canvasSetting.title_area = title_area;
+	
+	if(width && !height)
+		setWindow(width, getScreenHeight()); 
+	else if(height && ! width)
+		setWindow(getScreenWidth(), height);
+	else if(width && height)
+		setWindow(width, height);
+	
 	canvasSetting.width = getScreenWidth();
 	canvasSetting.height = getScreenHeight()-1;
 	hideCursor();
@@ -773,6 +800,9 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious){
 		tecla = getch();
 		
 		switch(tecla){
+			case 10:
+				tecla = 13;
+				break;
 			case 8: //backspace
 				if(size > 0 && pos > 0){
 					for(int i=pos-1; i<size; i++)
@@ -854,8 +884,6 @@ void readString(char variable[], int x, int y, int maxLength, int showPrevious){
 	variable[size] = '\0';
 	gotoxy(x, y); printf("%s", variable);
 }
-
-
 
 char readChar(int x, int y, char showPrevious){ //IT SHOWS CHAR INPUT
 	if(showPrevious){

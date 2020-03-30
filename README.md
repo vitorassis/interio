@@ -47,7 +47,7 @@
 	* [centralize](#centralizeconst-char---int)
 	* [printCenter](#printcenterconst-char--int--void)
 
-### setCanvas(char, int, int, int, int) : void
+### setCanvas(char, int, int, int, int, int, int) : void
 
 Must be called before `drawCanvas()`, explaned below, in order to configure it.
 
@@ -58,6 +58,8 @@ int notification_area default 0
 int title_area flag default 0
 int forecolor default 7
 int backcolor default 0
+int width default 0 // IT WILL KEEP THE CONSOLE'S DEFAULT
+int height default 0 // IT WILL KEEP THE CONSOLE'S DEFAULT
 ```
 Returns:
 ```
