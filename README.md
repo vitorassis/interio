@@ -54,6 +54,7 @@
 	* [drawLine](#drawlineint-int-int-int-char--void)
 	* [centralize](#centralizeconst-char---int)
 	* [printCenter](#printcenterconst-char--int--void)
+	* [printAt]()
 
 ### setCanvas(char, int, int, int, int, int, int) : void
 
@@ -246,6 +247,22 @@ Returns:
 ```
 void
 ```
+
+### printAt(int x, int y, char* format, ...) : void
+
+It prints the sent text at the wished position.
+
+Receives:
+```
+int x
+int y
+char* format
+... (varibles for format's mask)
+```
+Returns:
+```
+void
+``` 
 
 ### showTitle(const char [], int) : void
 

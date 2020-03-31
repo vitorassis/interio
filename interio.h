@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <windows.h>
+#include <stdarg.h>
 
 #define clearScreen clrscr
 
@@ -303,6 +304,16 @@ struct scrollPane{
 			*		@returnType 				void
 			*/
 		void 		printCenter				(const char text[], int y);
+		
+			/**FUNCTION printAt
+			*		@param x 					int
+			*		@param y					int
+			*		@param format				char *
+			*		@param ...					variables for format's masks
+			*
+			*		@returnType 				void
+			*/
+		void 		printAt					(int x, int y, char* format, ...);
 
 //========================END FUNCTIONS========================
 
@@ -1162,4 +1173,50 @@ void dumpIntVector(int vetor[], int size){
 	getch();
 	clearScreen();
 	drawCanvas();
+}
+
+void printAt(int x, int y, char* format,...){
+	char* convert(unsigned int, int);
+	gotoxy(x, y);
+	
+	char *traverse; 
+	unsigned int i; 
+	char *s; 
+	
+	//Module 1: Initializing Myprintf's arguments 
+	va_list arg; 
+	va_start(arg, format); 
+	
+	for(traverse = format; *traverse != '\0'; traverse++) 
+	{ 
+		while( *traverse != '%' ) 
+		{ 
+			putchar(*traverse);
+			traverse++; 
+		} 
+		
+		traverse++; 
+		
+		//Module 2: Fetching and executing arguments
+		switch(*traverse) 
+		{ 
+			case 'c' : printf("%c", va_arg(arg,int));
+						break; 
+						
+			case 'd' : printf("%d", va_arg(arg,int));
+						break; 
+						
+			case 'o': printf("%o", va_arg(arg,int));
+						break; 
+						
+			case 's': printf("%s", va_arg(arg,char *));
+						break; 
+						
+			case 'x': printf("%x", va_arg(arg,unsigned int));
+						break; 
+		}	
+	} 
+	
+	//Module 3: Closing argument list to necessary clean-up
+	va_end(arg); 
 }
