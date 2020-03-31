@@ -312,8 +312,9 @@ struct scrollPane{
 			*		@param ...					variables for format's masks
 			*
 			*		@returnType 				void
-			*/
-		void 		printAt					(int x, int y, char* format, ...);
+		
+			*/  	
+			void	printAt					(int x, int y, char* format, ...); 
 
 //========================END FUNCTIONS========================
 
@@ -649,7 +650,6 @@ int centralize(const char texto[]){ //CENTRALIZE TEXT
 	return (((canvasSetting.width-2)-strlen(texto))/2) +1;
 }
 
-
 void printCenter(const char text[], int y){
 	gotoxy(centralize(text), y);puts(text);
 }
@@ -663,7 +663,7 @@ void showTitle(const char title[], int color){
 
 void showToast(const char text[], int type){ //SHOW NOTIFICATION TEXT
 	removeToast();
-	textcolor(type);
+	textcolor(type);  
 	textbackground(0);
 	gotoxy(centralize(text), canvasSetting.height-2);printf("* %s *", text);
 	textcolor(7);
