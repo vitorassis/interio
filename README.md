@@ -1,8 +1,7 @@
 # Interface I/O C
 
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.2.3
-* Certify you have conio2.h installed in your PC before using this library
+* version 3.0.0
 * THIS ONLY RUNS ON WINDOWS MACHINES!
 * If you like, please, comment and share it.
 
@@ -54,7 +53,7 @@
 	* [drawLine](#drawlineint-int-int-int-char--void)
 	* [centralize](#centralizeconst-char---int)
 	* [printCenter](#printcenterconst-char--int--void)
-	* [printAt]()
+	* [printAt](#printatint-int-char---void)
 
 ### setCanvas(char, int, int, int, int, int, int) : void
 
@@ -248,7 +247,7 @@ Returns:
 void
 ```
 
-### printAt(int x, int y, char* format, ...) : void
+### printAt(int, int, char*, ...) : void
 
 It prints the sent text at the wished position.
 

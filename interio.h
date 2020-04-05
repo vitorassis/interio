@@ -1,20 +1,20 @@
 /**
 * Developed by Vitor Assis Camargo, at 2019
-* version 2.2.3
-* Certify you have conio2.h installed in your PC before using this library
+* version 3.0.0
 * THIS ONLY RUNS ON WINDOWS MACHINES!
-* If you like, share, pull and enjoy it!
+* If you like, share, clone and enjoy it!
 */
 
-#include <conio2.h>
 #include <locale.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <stdarg.h>
-
-#define clearScreen clrscr
+#include <windef.h>
+#include <winbase.h>
+#include <wincon.h>
+#include <conio.h>
 
 #define TOAST_SUCCESS 10
 #define TOAST_WARNING 6
@@ -87,7 +87,7 @@ struct scrollPane{
 			*	
 			*		@returnType breadcrumb
 			*/
-		breadcrumb 	setBreadcrumb			(const char text[], breadcrumb *prev=NULL);
+		breadcrumb setBreadcrumb (const char text[], breadcrumb *prev=NULL);
 		
 		
 			/**	FUNCTION showBreadCrumbs
@@ -96,7 +96,7 @@ struct scrollPane{
 			*	
 			*		@returnType int
 			*/
-		void 		showBreadcrumbs			(breadcrumb bread);
+		void showBreadcrumbs (breadcrumb bread);
 	
 	// -------------- canvas --------------
 	
@@ -109,17 +109,17 @@ struct scrollPane{
 			*		
 			*		@returnType 				void
 			*/
-		void 		setCanvas				(char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0, int width=0, int height=0);
+		void setCanvas (char border='#', int notification_area=0, int title_area=0, int forecolor=7, int backcolor=0, int width=0, int height=0);
 	
 			/**	FUNCTION drawCanvas
 			*		@returnType 				void
 			*/
-		void 		drawCanvas				();
+		void drawCanvas	();
 	
 			/**	FUNCTION clearCanvas
 			*		@returnType 				void
 			*/
-		void 		clearCanvas				();
+		void clearCanvas ();
 	
 			/**	FUNCTION showTitle
 			*		@param texto 				const char []
@@ -127,7 +127,7 @@ struct scrollPane{
 			*	
 			*		@returnType void
 			*/
-		void 		showTitle				(const char title[], int color=7);
+		void showTitle (const char title[], int color=7);
 	
 	// -------------- menu --------------
 	
@@ -138,7 +138,7 @@ struct scrollPane{
 			*	
 			*		@returnType 				menu
 			*/
-		menu 		setMenu					(int yStart, int x=0, char cursor='>');
+		menu setMenu (int yStart, int x=0, char cursor='>');
 	
 			/**	FUNCTION addMenuOption
 			*		@param 	_menu 				menu
@@ -147,14 +147,14 @@ struct scrollPane{
 			*	
 			*		@returnType menu => CREATED MENU
 			*/
-		void 		addMenuOption			(menu &_menu, const char option[], int enabled=1);
+		void addMenuOption (menu &_menu, const char option[], int enabled=1);
 	
 			/**	FUNCTION clearMenuOptions
 			*		@param _menu 				menu
 			*	
 			*		@returnType 				void
 			*/
-		void 		clearMenuOptions		(menu &_menu);
+		void clearMenuOptions (menu &_menu);
 	
 			/**	FUNCTION showMenu
 			*		@param menuSettings 		menu
@@ -162,7 +162,7 @@ struct scrollPane{
 			*		
 			*		@returnType 				int => SELECTED INT MENU INDEX (THE SAME ORDER YOU ADDED THEM)
 			*/
-		int			showMenu				(menu menuSettings, int option=0);
+		int	showMenu (menu menuSettings, int option=0);
 	
 	// -------------- toast --------------
 	
@@ -172,12 +172,12 @@ struct scrollPane{
 			*
 			*		@returnType 				void
 			*/
-		void 		showToast				(const char text[], int type=7);
+		void showToast (const char text[], int type=7);
 	
 			/**	FUNCTION removeToast
 			*		@returnType 				void
 			*/
-		void		removeToast				();
+		void removeToast ();
 	
 	// -------------- input --------------
 	
@@ -189,7 +189,7 @@ struct scrollPane{
 			*	
 			*		@returnType 				int => INT READ VARIABLE
 			*/
-		int 		readInt					(int x, int y, int maxLength, int showPrevious=0);
+		int readInt (int x, int y, int maxLength, int showPrevious=0);
 		
 			/**	FUNCTION readFloat
 			*		@param x 					int
@@ -199,7 +199,7 @@ struct scrollPane{
 			*	
 			*		@returnType 				float => FLOAT READ VARIABLE
 			*/
-		float 		readFloat				(int x, int y, int maxLength, float showPrevious=0);
+		float readFloat (int x, int y, int maxLength, float showPrevious=0);
 		
 			/**	FUNCTION readString
 			*		@param variable				char []
@@ -210,14 +210,14 @@ struct scrollPane{
 			*
 			*		@returnType 				void
 			*/
-		void 		readString				(char variable[], int x, int y, int maxLength, int showPrevious=0);
+		void readString (char variable[], int x, int y, int maxLength, int showPrevious=0);
 		
 			/**	FUNCTION readChar
 			*		@param x 					int 
 			*		@param y 					int
 			*		@param showPrevious 		int				default 0
 			*/
-		char 		readChar				(int x, int y, char showPrevious=0);
+		char readChar (int x, int y, char showPrevious=0);
 		
 			/**	FUNCTION readMaskedString
 			*		@param variable				char []
@@ -229,7 +229,7 @@ struct scrollPane{
 			*
 			*		@returnType void
 			*/
-		void 		readMaskedString		(char variable[], const char mask[], int xi, int y, int showPreviousd=0);
+		void readMaskedString (char variable[], const char mask[], int xi, int y, int showPreviousd=0);
 		
 			/**	FUNCTION readPassword
 			*		@param variable				char []
@@ -241,7 +241,7 @@ struct scrollPane{
 			*
 			*		@returnType 				void
 			*/
-		void 		readPassword			(char variable[], char mask, int x, int y, int maxLength);
+		void readPassword (char variable[], char mask, int x, int y, int maxLength);
 		
 	
 	// -------------- scrollpane
@@ -249,7 +249,7 @@ struct scrollPane{
 			/**	FUNCTION setScrollPane
 			*		@returnType 				scrollPane	
 			*/
-		scrollPane 	setScrollPane			();
+		scrollPane setScrollPane ();
 		
 			/**	FUNCTION addScrollPaneItem
 			*		@param pane					scrollPane
@@ -259,14 +259,14 @@ struct scrollPane{
 			*
 			*		@returnType					int
 			*/
-		int 		addScrollPaneItem		(scrollPane &pane, int x, int y, const char text[]);
+		int addScrollPaneItem (scrollPane &pane, int x, int y, const char text[]);
 		
 			/**	FUNCTION showScrollPane
 			*		@param pane					scrollPane
 			*
 			*		returnType					void
 			*/
-		void 		showScrollPane			(scrollPane pane);
+		void showScrollPane (scrollPane pane);
 	
 	// -------------- UI utils --------------
 	
@@ -278,7 +278,7 @@ struct scrollPane{
 			*	
 			*		@returnType 				void
 			*/
-		void 		clearCoordinates		(int xi, int yi, int xf=0, int yf=0);
+		void clearCoordinates (int xi, int yi, int xf=0, int yf=0);
 		
 			/**	FUNCTION drawLine
 			*		@param start 				int
@@ -288,14 +288,14 @@ struct scrollPane{
 			*
 			*		@returnType 				void
 			*/
-		void 		drawLine				(int start, int finish, int coordinate, int vertical=0, char border='*');
+		void drawLine (int start, int finish, int coordinate, int vertical=0, char border='*');
 		
 			/**	FUNCTION centralize
 			*		@param texto				char []
 			*
 			*		@returnType 				int => CENTER X
 			*/
-		int 		centralize				(const char texto[]);
+		int centralize (const char texto[]);
 		
 			/**	FUNCTION printCenter
 			*		@param texto	 			char []
@@ -303,7 +303,7 @@ struct scrollPane{
 			*	
 			*		@returnType 				void
 			*/
-		void 		printCenter				(const char text[], int y);
+		void printCenter (const char text[], int y);
 		
 			/**FUNCTION printAt
 			*		@param x 					int
@@ -314,10 +314,19 @@ struct scrollPane{
 			*		@returnType 				void
 		
 			*/  	
-			void	printAt					(int x, int y, char* format, ...); 
+		void printAt (int x, int y, char* format, ...); 
+		
+	// -------------- Conio functions --------------		
+		void gotoxy(int x, int y);
+		void textcolor(int _color);
+		void textbackground(int _color);
+		void clrscr(void);
 
 //========================END FUNCTIONS========================
 
+void clearScreen(){
+	clrscr();
+}
 
 scrollPane setScrollPane(){
 	scrollPane scroll;
@@ -1220,3 +1229,61 @@ void printAt(int x, int y, char* format,...){
 	//Module 3: Closing argument list to necessary clean-up
 	va_end(arg); 
 }
+
+//--- conio ---------------------------------------------------------
+void gotoxy(int x, int y)
+{
+  COORD c ;
+  c.X = x - 1;
+  c.Y = y - 1;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+
+void textattr(int _attr)
+{
+  SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), _attr);
+}
+
+void textbackground(int _color)
+{
+  CONSOLE_SCREEN_BUFFER_INFO Info ;
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+  textattr((Info.wAttributes & 0x0F) | (_color<<4));
+}
+
+void textcolor(int _color) {
+  CONSOLE_SCREEN_BUFFER_INFO Info ;
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+  textattr((Info.wAttributes & 0xF0) | _color);
+}
+
+int wherex()
+{
+  CONSOLE_SCREEN_BUFFER_INFO Info;
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+  return Info.dwCursorPosition.X + 1;
+}
+
+int wherey()
+{
+  CONSOLE_SCREEN_BUFFER_INFO Info;
+  GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
+  return Info.dwCursorPosition.Y + 1;
+}
+
+void clrscr(void)
+{
+  COORD coord = { 0, 0 };
+  DWORD dwWritten, dwSize;
+  HANDLE hScreen=GetStdHandle(STD_OUTPUT_HANDLE);
+  CONSOLE_SCREEN_BUFFER_INFO Info;
+
+  if(GetConsoleScreenBufferInfo(hScreen, &Info))
+  {
+      dwSize = Info.dwSize.X * Info.dwSize.Y;
+      FillConsoleOutputCharacter (hScreen, ' ', dwSize, coord, &dwWritten);
+      FillConsoleOutputAttribute (hScreen, Info.wAttributes, dwSize, coord, &dwWritten);
+      gotoxy (1, 1);
+  }
+}
+
